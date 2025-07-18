@@ -1,5 +1,5 @@
 // pages/FondoAccessorioDipendentePageHelpers.ts
-import { FondoAccessorioDipendenteData } from '../types.js';
+import { FondoAccessorioDipendenteData } from '../types';
 
 export const fadFieldDefinitions: Array<{
   key: keyof FondoAccessorioDipendenteData;

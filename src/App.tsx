@@ -10,13 +10,14 @@ import { ReportsPage } from './pages/ReportsPage';
 import { FondoAccessorioDipendentePage } from './pages/FondoAccessorioDipendentePage';
 import { FondoElevateQualificazioniPage } from './pages/FondoElevateQualificazioniPage';
 import { FondoSegretarioComunalePage } from './pages/FondoSegretarioComunalePage';
-import { FondoDirigenzaPage } from './pages/FondoDirigenzaPage';
-import { ChecklistPage } from './pages/ChecklistPage';
+import { FondoDirigenzaPage } from './pages/FondoDirigenzaPage'; 
+import { ChecklistPage } from './pages/ChecklistPage'; 
 import { PersonaleServizioPage } from './pages/PersonaleServizioPage';
-import { DistribuzioneRisorsePage } from './pages/DistribuzioneRisorsePage';
+import { DistribuzioneRisorsePage } from './pages/DistribuzioneRisorsePage'; // NUOVA PAGINA
 
 import { AppProvider, useAppContext } from './contexts/AppContext';
 import { MainLayout } from './components/layout/MainLayout';
+import { PageModule } from './types';
 import { LoadingSpinner } from './components/shared/LoadingSpinner';
 
 

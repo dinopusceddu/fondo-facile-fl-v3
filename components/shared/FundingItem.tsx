@@ -1,6 +1,6 @@
 // components/shared/FundingItem.tsx
 import React from 'react';
-import { Input } from './Input.js';
+import { Input } from './Input';
 
 interface FundingItemProps<T> {
   id: keyof T;

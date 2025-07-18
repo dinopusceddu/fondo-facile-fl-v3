@@ -1,8 +1,8 @@
 // components/dashboard/DashboardSummary.tsx
 import React from 'react';
-import { CalculatedFund, HistoricalData } from '../../types.js';
-import { Card } from '../shared/Card.js';
-import { TEXTS_UI } from '../../constants.js';
+import { CalculatedFund, HistoricalData } from '../../types';
+import { Card } from '../shared/Card';
+import { TEXTS_UI } from '../../constants';
 
 interface DashboardSummaryProps {
   calculatedFund?: CalculatedFund;
@@ -62,23 +62,23 @@ export const DashboardSummary: React.FC<DashboardSummaryProps> = ({ calculatedFu
     <Card title={`Riepilogo Direzionale Fondi ${annoRiferimento}`} className="mb-8">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <SummaryItem 
-            label="Totale Componente Stabile"
-            value={calculatedFund.totaleComponenteStabile}
+            label="Totale Parte Stabile"
+            value={calculatedFund.totaleParteStabile}
             className="bg-[#fcf8f8] border-[#f3e7e8]"
           />
           <SummaryItem 
-            label="Totale Componente Variabile"
-            value={calculatedFund.totaleComponenteVariabile}
+            label="Totale Parte Variabile"
+            value={calculatedFund.totaleParteVariabile}
             className="bg-[#fcf8f8] border-[#f3e7e8]"
           />
           <SummaryItem 
             label={`Totale Fondo ${annoRiferimento}`}
-            value={calculatedFund.totaleFondoRisorseDecentrate}
+            value={calculatedFund.totaleFondo}
             previousValue={prevYearTotal}
             className="bg-[#f3e7e8] border-[#d1c0c1]"
             valueClassName="text-[#ea2832]"
           />
-          {calculatedFund.superamentoLimite2016 && (
+          {calculatedFund.superamentoLimite2016 && calculatedFund.superamentoLimite2016 > 0 && (
             <SummaryItem 
                 label="Superamento Limite 2016"
                 value={calculatedFund.superamentoLimite2016}

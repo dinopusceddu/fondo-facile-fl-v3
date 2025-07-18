@@ -1,12 +1,12 @@
 // pages/ChecklistPage.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
-import { useAppContext } from '../contexts/AppContext.js';
-import { Card } from '../components/shared/Card.js';
-import { Button } from '../components/shared/Button.js';
-import { LoadingSpinner } from '../components/shared/LoadingSpinner.js';
-import { FundData, CalculatedFund } from '../types.js';
-import { TEXTS_UI } from '../constants.js';
+import { useAppContext } from '../contexts/AppContext';
+import { Card } from '../components/shared/Card';
+import { Button } from '../components/shared/Button';
+import { LoadingSpinner } from '../components/shared/LoadingSpinner';
+import { FundData, CalculatedFund } from '../types';
+import { TEXTS_UI } from '../constants';
 
 interface Message {
   id: string;

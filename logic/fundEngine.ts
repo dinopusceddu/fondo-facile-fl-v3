@@ -12,9 +12,9 @@ import {
     FondoElevateQualificazioniData,
     FondoSegretarioComunaleData,
     FondoDirigenzaData
-} from '../types.js';
+} from '../types';
 
-import { fadFieldDefinitions } from '../pages/FondoAccessorioDipendentePageHelpers.js';
+import { fadFieldDefinitions } from '../pages/FondoAccessorioDipendentePageHelpers';
 
 import {
   RIF_ART23_DLGS75_2017,
@@ -29,7 +29,7 @@ import {
   LIMITE_INCREMENTO_PNRR_DL13_2023,
   RIF_ART45_DLGS36_2023,
   RIF_ART208_CDS,
-} from '../constants.js';
+} from '../constants';
 
 // --- FROM hooks/useSimulatoreCalculations.ts ---
 
@@ -242,6 +242,7 @@ export const calculateFundCompletely = (fundData: FundData): CalculatedFund => {
     fondoDirigenzaData 
   } = fundData;
 
+  // --- START: Global Calculation Logic (for legacy components) ---
   const fondoBase2016_originale = 
     (historicalData.fondoSalarioAccessorioPersonaleNonDirEQ2016 || 0) +
     (historicalData.fondoElevateQualificazioni2016 || 0) +
@@ -329,6 +330,8 @@ export const calculateFundCompletely = (fundData: FundData): CalculatedFund => {
     
   const superamentoDelLimite2016 = Math.max(0, totaleRisorseSoggetteAlLimiteDaFondiSpecifici - limiteArt23C2Modificato);
 
+  // --- START: NEW DETAILED CALCULATION FOR DASHBOARD SUMMARY ---
+  
   const isEnteInCondizioniSpeciali = !!annualData.isEnteDissestato || !!annualData.isEnteStrutturalmenteDeficitario || !!annualData.isEnteRiequilibrioFinanziario;
   const fadTotals = calculateFadTotals(
     fondoAccessorioDipendenteData || {}, 
@@ -390,6 +393,7 @@ export const calculateFundCompletely = (fundData: FundData): CalculatedFund => {
     incrementoDeterminatoArt23C2, 
     incrementoOpzionaleVirtuosi,
     risorseVariabili,
+    totaleFondoRisorseDecentrate,
     limiteArt23C2Modificato, 
     ammontareSoggettoLimite2016: ammontareSoggettoLimite2016_global,
     superamentoLimite2016: superamentoDelLimite2016 > 0 ? superamentoDelLimite2016 : undefined,
@@ -403,9 +407,7 @@ export const calculateFundCompletely = (fundData: FundData): CalculatedFund => {
     // Aliases for backward compatibility
     totaleComponenteStabile: totaleComponenteStabile,
     totaleComponenteVariabile: totaleComponenteVariabile,
-    totaleFondoRisorseDecentrate: totaleFondoRisorseDecentrate,
-
-    // Detailed breakdown
+    
     dettaglioFondi: {
       dipendente: { stabile: fad_stabile, variabile: fad_variabile, totale: fad_totale },
       eq: { stabile: eq_stabile, variabile: eq_variabile, totale: eq_totale },

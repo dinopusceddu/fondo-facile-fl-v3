@@ -1,12 +1,12 @@
 // components/dataInput/Art23EmployeeAndIncrementForm.tsx
 import React, { useState } from 'react';
-import { useAppContext } from '../../contexts/AppContext.js';
-import { HistoricalData } from '../../types.js';
-import { Input } from '../shared/Input.js';
-import { Button } from '../shared/Button.js';
-import { Card } from '../shared/Card.js';
-import { TEXTS_UI } from '../../constants.js';
-import { Art23EmployeeEntryPage } from '../../pages/Art23EmployeeEntryPage.js';
+import { useAppContext } from '../../contexts/AppContext';
+import { HistoricalData } from '../../types';
+import { Input } from '../shared/Input';
+import { Button } from '../shared/Button';
+import { Card } from '../shared/Card';
+import { TEXTS_UI } from '../../constants';
+import { Art23EmployeeEntryPage } from '../../pages/Art23EmployeeEntryPage';
 
 const formatNumberForDisplay = (value?: number, digits = 2) => {
   if (value === undefined || value === null || isNaN(value)) return TEXTS_UI.notApplicable;

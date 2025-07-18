@@ -1,11 +1,12 @@
 
+
 // components/dataInput/ProventiSpecificiForm.tsx
 import React from 'react'; // Removed useState as it's not used
-import { useAppContext } from '../../contexts/AppContext.js';
-import { ProventoSpecifico } from '../../types.js';
-import { Input } from '../shared/Input.js';
-import { Button } from '../shared/Button.js';
-import { RIF_ART45_DLGS36_2023, RIF_ART208_CDS, TEXTS_UI } from '../../constants.js'; // RIF_ART8_DL13_2023 not used
+import { useAppContext } from '../../contexts/AppContext';
+import { ProventoSpecifico } from '../../types';
+import { Input } from '../shared/Input';
+import { Button } from '../shared/Button';
+import { RIF_ART45_DLGS36_2023, RIF_ART208_CDS, TEXTS_UI } from '../../constants'; // RIF_ART8_DL13_2023 not used
 
 export const ProventiSpecificiForm: React.FC = () => {
   const { state, dispatch } = useAppContext();
