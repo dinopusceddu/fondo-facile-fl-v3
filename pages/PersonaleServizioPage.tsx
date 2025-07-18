@@ -1,5 +1,5 @@
 // pages/PersonaleServizioPage.tsx
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useAppContext } from '../contexts/AppContext.js';
 import { PersonaleServizioDettaglio, LivelloPeo, TipoMaggiorazione, AreaQualifica } from '../types.js';
 import { Card } from '../components/shared/Card.js';
@@ -182,6 +182,16 @@ export const PersonaleServizioPage: React.FC = () => {
       return sum;
     }, 0);
   }, [employeeList, annoRiferimento]);
+
+  useEffect(() => {
+    dispatch({ 
+        type: 'UPDATE_DISTRIBUZIONE_RISORSE_DATA', 
+        payload: { 
+            u_diffProgressioniStoriche: totalAbsorbedProgression,
+            u_indennitaComparto: totalAbsorbedIndennitaComparto,
+        } 
+    });
+  }, [totalAbsorbedProgression, totalAbsorbedIndennitaComparto, dispatch]);
 
   const totalAbsorbed = totalAbsorbedProgression + totalAbsorbedIndennitaComparto;
   

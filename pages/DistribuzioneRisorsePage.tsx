@@ -3,7 +3,6 @@ import React, { useMemo } from 'react';
 import { useAppContext } from '../contexts/AppContext.js';
 import { Card } from '../components/shared/Card.js';
 import { TEXTS_UI, distribuzioneFieldDefinitions } from '../constants.js';
-import { calculateFadTotals } from '../logic/fundEngine.js';
 import { DistribuzioneRisorseData } from '../types.js';
 import { FundingItem } from '../components/shared/FundingItem.js';
 import { Button } from '../components/shared/Button.js';
@@ -17,7 +16,7 @@ export const DistribuzioneRisorsePage: React.FC = () => {
   const { state, dispatch, saveState } = useAppContext();
   const { fundData, calculatedFund } = state;
 
-  if (!calculatedFund) {
+  if (!calculatedFund || !calculatedFund.dettaglioFondi) {
     return (
       <div className="space-y-8">
         <h2 className="text-[#1b0e0e] tracking-light text-2xl sm:text-[30px] font-bold leading-tight">Distribuzione delle Risorse</h2>
@@ -40,44 +39,41 @@ export const DistribuzioneRisorsePage: React.FC = () => {
   }
 
   const {
-    fondoAccessorioDipendenteData,
-    annualData,
-    fondoElevateQualificazioniData,
     distribuzioneRisorseData,
   } = fundData;
 
-  const {
-    simulatoreRisultati,
-    isEnteDissestato,
-    isEnteStrutturalmenteDeficitario,
-    isEnteRiequilibrioFinanziario,
-  } = annualData;
-  
-  const isEnteInCondizioniSpeciali = !!isEnteDissestato || !!isEnteStrutturalmenteDeficitario || !!isEnteRiequilibrioFinanziario;
-  const incrementoEQconRiduzioneDipendenti = fondoElevateQualificazioniData?.ris_incrementoConRiduzioneFondoDipendenti;
+  const totaleDaDistribuire = calculatedFund.dettaglioFondi.dipendente.totale;
 
-  // Calculate total available resources from FAD
-  const fadTotals = calculateFadTotals(
-    fondoAccessorioDipendenteData || {},
-    simulatoreRisultati,
-    isEnteInCondizioniSpeciali,
-    incrementoEQconRiduzioneDipendenti
-  );
-  const risorseDaDistribuire = fadTotals.totaleRisorseDisponibiliContrattazione_Dipendenti;
-
-  // Handle changes to allocation inputs
   const handleChange = (field: keyof DistribuzioneRisorseData, value?: number) => {
     dispatch({ type: 'UPDATE_DISTRIBUZIONE_RISORSE_DATA', payload: { [field]: value } });
   };
   
-  // Calculate total allocated and remaining amount
-  const totaleAllocato = useMemo(() => {
-    return Object.values(distribuzioneRisorseData || {}).reduce((sum, value) => sum + (value || 0), 0);
+  const utilizziParteStabile = useMemo(() => {
+    const data = distribuzioneRisorseData || {};
+    return (data.u_diffProgressioniStoriche || 0) +
+           (data.u_indennitaComparto || 0) +
+           (data.u_incrIndennitaEducatori || 0) +
+           (data.u_incrIndennitaScolastico || 0) +
+           (data.u_indennitaEx8QF || 0);
+  }, [distribuzioneRisorseData]);
+  
+  const utilizziParteVariabile = useMemo(() => {
+    const data = distribuzioneRisorseData || {};
+    return Object.keys(data)
+      .filter(key => key.startsWith('p_'))
+      .reduce((sum, key) => sum + (data[key as keyof DistribuzioneRisorseData] || 0), 0);
   }, [distribuzioneRisorseData]);
 
-  const importoRimanente = risorseDaDistribuire - totaleAllocato;
+  const totaleAllocato = useMemo(() => {
+    return utilizziParteStabile + utilizziParteVariabile;
+  }, [utilizziParteStabile, utilizziParteVariabile]);
 
-  // Group fields by section
+  const importoRimanente = totaleDaDistribuire - totaleAllocato;
+
+  const importoDisponibileContrattazione = useMemo(() => {
+    return totaleDaDistribuire - utilizziParteStabile;
+  }, [totaleDaDistribuire, utilizziParteStabile]);
+
   const sections = useMemo(() => 
     distribuzioneFieldDefinitions.reduce((acc, field) => {
       (acc[field.section] = acc[field.section] || []).push(field);
@@ -86,26 +82,34 @@ export const DistribuzioneRisorsePage: React.FC = () => {
   , []);
 
   return (
-    <div className="space-y-8 pb-24"> {/* Padding bottom for sticky bar */}
+    <div className="space-y-8 pb-24">
       <h2 className="text-[#1b0e0e] tracking-light text-2xl sm:text-[30px] font-bold leading-tight">Distribuzione delle Risorse del Fondo</h2>
       
       <Card title="Riepilogo Risorse e Allocazione" className="sticky top-[63px] z-30 bg-white/90 backdrop-blur-sm border-b-2">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="p-4 bg-[#fcf8f8] rounded-lg text-center">
             <h4 className="text-sm font-medium text-[#5f5252]">Totale da Distribuire</h4>
-            <p className="text-2xl font-bold text-[#1b0e0e]">{formatCurrency(risorseDaDistribuire)}</p>
+            <p className="text-2xl font-bold text-[#1b0e0e]">{formatCurrency(totaleDaDistribuire)}</p>
+            <p className="text-xs text-[#5f5252] mt-1">(Dal Fondo Personale Dipendente)</p>
+          </div>
+          <div className="p-4 bg-sky-50 rounded-lg text-center border border-sky-200">
+            <h4 className="text-sm font-medium text-sky-800">Importo disponibile alla contrattazione</h4>
+            <p className="text-2xl font-bold text-sky-700">{formatCurrency(importoDisponibileContrattazione)}</p>
+            <p className="text-xs text-sky-600 mt-1">(Totale da Distribuire - Utilizzi Parte Stabile)</p>
           </div>
           <div className="p-4 bg-[#fcf8f8] rounded-lg text-center">
             <h4 className="text-sm font-medium text-[#5f5252]">Totale Allocato</h4>
             <p className={`text-2xl font-bold ${importoRimanente < 0 ? 'text-[#c02128]' : 'text-green-600'}`}>
               {formatCurrency(totaleAllocato)}
             </p>
+            <p className="text-xs text-[#5f5252] mt-1">(Somma di tutti gli utilizzi)</p>
           </div>
           <div className={`p-4 rounded-lg text-center transition-colors ${importoRimanente < 0 ? 'bg-[#fef2f2]' : 'bg-[#f0fdf4]'}`}>
             <h4 className="text-sm font-medium text-[#5f5252]">Importo Rimanente</h4>
             <p className={`text-2xl font-bold ${importoRimanente < 0 ? 'text-[#c02128]' : 'text-green-700'}`}>
               {formatCurrency(importoRimanente)}
             </p>
+            <p className="text-xs text-[#5f5252] mt-1">(Totale da Distribuire - Totale Allocato)</p>
           </div>
         </div>
         {importoRimanente < 0 && (
@@ -116,17 +120,22 @@ export const DistribuzioneRisorsePage: React.FC = () => {
       </Card>
       
       {Object.entries(sections).map(([sectionName, fields]) => (
-        <Card key={sectionName} title={sectionName} isCollapsible defaultCollapsed>
-          {fields.map(def => (
-            <FundingItem<DistribuzioneRisorseData>
-              key={def.key}
-              id={def.key}
-              description={def.description}
-              value={distribuzioneRisorseData[def.key]}
-              onChange={handleChange}
-              riferimentoNormativo={def.riferimento}
-            />
-          ))}
+        <Card key={sectionName} title={sectionName} isCollapsible defaultCollapsed={false}>
+          {fields.map(def => {
+            const isAutoCalculated = def.key === 'u_diffProgressioniStoriche' || def.key === 'u_indennitaComparto';
+            return (
+              <FundingItem<DistribuzioneRisorseData>
+                key={def.key}
+                id={def.key}
+                description={def.description}
+                value={distribuzioneRisorseData[def.key]}
+                onChange={handleChange}
+                riferimentoNormativo={def.riferimento}
+                disabled={isAutoCalculated}
+                inputInfo={isAutoCalculated ? "Valore calcolato automaticamente dalla pagina Personale in Servizio" : undefined}
+              />
+            );
+          })}
         </Card>
       ))}
 
