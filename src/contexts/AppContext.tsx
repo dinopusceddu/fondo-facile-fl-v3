@@ -1,9 +1,9 @@
 // contexts/AppContext.tsx
 import React, { createContext, useReducer, Dispatch, useContext, useCallback } from 'react';
-import { AppState, AppAction, UserRole, FundData, CalculatedFund, ComplianceCheck, ProventoSpecifico, EmployeeCategory, Art23EmployeeDetail, SimulatoreIncrementoInput, FondoAccessorioDipendenteData, FondoElevateQualificazioniData, FondoSegretarioComunaleData, FondoDirigenzaData, SimulatoreIncrementoRisultati, PersonaleServizioDettaglio, LivelloPeo, TipoMaggiorazione, AreaQualifica, DistribuzioneRisorseData } from '../types.js';
-import { DEFAULT_CURRENT_YEAR, INITIAL_HISTORICAL_DATA, INITIAL_ANNUAL_DATA, DEFAULT_USER, INITIAL_FONDO_ACCESSORIO_DIPENDENTE_DATA, INITIAL_FONDO_ELEVATE_QUALIFICAZIONI_DATA, INITIAL_FONDO_SEGRETARIO_COMUNALE_DATA, INITIAL_FONDO_DIRIGENZA_DATA, INITIAL_DISTRIBUZIONE_RISORSE_DATA } from '../constants.js';
-import { calculateFundCompletely } from '../logic/fundEngine.js'; 
-import { runAllComplianceChecks } from '../logic/fundEngine.js'; 
+import { AppState, AppAction, UserRole, FundData, CalculatedFund, ComplianceCheck, ProventoSpecifico, EmployeeCategory, Art23EmployeeDetail, SimulatoreIncrementoInput, FondoAccessorioDipendenteData, FondoElevateQualificazioniData, FondoSegretarioComunaleData, FondoDirigenzaData, SimulatoreIncrementoRisultati, PersonaleServizioDettaglio, LivelloPeo, TipoMaggiorazione, AreaQualifica, DistribuzioneRisorseData } from '../types';
+import { DEFAULT_CURRENT_YEAR, INITIAL_HISTORICAL_DATA, INITIAL_ANNUAL_DATA, DEFAULT_USER, INITIAL_FONDO_ACCESSORIO_DIPENDENTE_DATA, INITIAL_FONDO_ELEVATE_QUALIFICAZIONI_DATA, INITIAL_FONDO_SEGRETARIO_COMUNALE_DATA, INITIAL_FONDO_DIRIGENZA_DATA, INITIAL_DISTRIBUZIONE_RISORSE_DATA } from '../constants';
+import { calculateFundCompletely } from '../logic/fundEngine';
+import { runAllComplianceChecks } from '../logic/fundEngine';
 
 const LOCAL_STORAGE_KEY = 'salario-accessorio-app-state';
 

@@ -1,13 +1,13 @@
 // pages/FundDetailsPage.tsx
 import React from 'react';
-import { useAppContext } from '../contexts/AppContext.js';
-import { Card } from '../components/shared/Card.js';
-import { FundComponent, FondoAccessorioDipendenteData, FondoElevateQualificazioniData, FondoSegretarioComunaleData, FondoDirigenzaData } from '../types.js';
-import { TEXTS_UI } from '../constants.js';
-import { LoadingSpinner } from '../components/shared/LoadingSpinner.js';
-import { calculateFadTotals } from '../logic/fundEngine.js';
-import { FundingItem } from '../components/shared/FundingItem.js';
-import { fadFieldDefinitions } from './FondoAccessorioDipendentePageHelpers.js';
+import { useAppContext } from '../contexts/AppContext';
+import { Card } from '../components/shared/Card';
+import { FundComponent, FondoAccessorioDipendenteData, FondoElevateQualificazioniData, FondoSegretarioComunaleData, FondoDirigenzaData } from '../types';
+import { TEXTS_UI } from '../constants';
+import { LoadingSpinner } from '../components/shared/LoadingSpinner';
+import { calculateFadTotals } from '../logic/fundEngine';
+import { FundingItem } from '../components/shared/FundingItem';
+import { fadFieldDefinitions } from './FondoAccessorioDipendentePageHelpers';
 
 const formatCurrency = (value?: number, defaultText = TEXTS_UI.notApplicable) => {
   if (value === undefined || value === null || isNaN(value)) return defaultText;
