@@ -1,5 +1,3 @@
-
-
 // components/dataInput/EmployeeCountsForm.tsx
 import React from 'react';
 import { useAppContext } from '../../contexts/AppContext';

@@ -1,7 +1,7 @@
 // src/reportService.ts
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable'; // This import augments the jsPDF prototype and its TypeScript definition
-import { CalculatedFund, FundData, User } from '../types.js';
+import { CalculatedFund, FundData, User } from '../types';
 
 const formatCurrency = (value?: number) => {
   if (value === undefined || value === null) return 'N/D';

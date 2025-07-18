@@ -1,12 +1,12 @@
 // pages/FundDetailsPage.tsx
 import React from 'react';
-import { useAppContext } from '../contexts/AppContext.js';
-import { Card } from '../components/shared/Card.js';
-import { FondoAccessorioDipendenteData } from '../types.js';
-import { TEXTS_UI } from '../constants.js';
-import { LoadingSpinner } from '../components/shared/LoadingSpinner.js';
-import { FundingItem } from '../components/shared/FundingItem.js';
-import { fadFieldDefinitions } from './FondoAccessorioDipendentePageHelpers.js';
+import { useAppContext } from '../contexts/AppContext';
+import { Card } from '../components/shared/Card';
+import { FondoAccessorioDipendenteData } from '../types';
+import { TEXTS_UI } from '../constants';
+import { LoadingSpinner } from '../components/shared/LoadingSpinner';
+import { FundingItem } from '../components/shared/FundingItem';
+import { fadFieldDefinitions } from './FondoAccessorioDipendentePageHelpers';
 
 const formatCurrency = (value?: number, defaultText = TEXTS_UI.notApplicable) => {
   if (value === undefined || value === null || isNaN(value)) return defaultText;
