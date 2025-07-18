@@ -1,11 +1,11 @@
 // src/ReportsPage.tsx
 import React from 'react';
-import { useAppContext } from './AppContext.js';
-import { Card } from './Card.js';
-import { Button } from './Button.js';
-import { generateDeterminazionePDF } from './reportService.js';
-import { TEXTS_UI } from '../constants.js';
-import { LoadingSpinner } from './LoadingSpinner.js';
+import { useAppContext } from './AppContext';
+import { Card } from './Card';
+import { Button } from './Button';
+import { generateDeterminazionePDF } from './reportService';
+import { TEXTS_UI } from '../constants';
+import { LoadingSpinner } from './LoadingSpinner';
 
 
 export const ReportsPage: React.FC = () => {

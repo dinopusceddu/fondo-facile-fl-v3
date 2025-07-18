@@ -1,9 +1,9 @@
 // src/ComplianceStatusWidget.tsx
 import React from 'react';
-import { ComplianceCheck } from '../types.js';
-import { Card } from './Card.js';
-import { TEXTS_UI } from '../constants.js';
-import { useAppContext } from './AppContext.js'; 
+import { ComplianceCheck } from '../types';
+import { Card } from './Card';
+import { TEXTS_UI } from '../constants';
+import { useAppContext } from './AppContext';
 
 interface ComplianceStatusWidgetProps {
   complianceChecks: ComplianceCheck[];

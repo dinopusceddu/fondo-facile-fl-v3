@@ -1,13 +1,13 @@
 // src/AnnualDataForm.tsx
 import React, { ChangeEvent } from 'react';
-import { useAppContext } from './AppContext.js';
-import { AnnualData, TipologiaEnte } from '../types.js';
-import { Input } from './Input.js';
-import { Select } from './Select.js';
-import { Card } from './Card.js';
-import { EmployeeCountsForm } from './EmployeeCountsForm.js';
-import { ProventiSpecificiForm } from './ProventiSpecificiForm.js';
-import { TEXTS_UI, ALL_TIPOLOGIE_ENTE } from '../constants.js';
+import { useAppContext } from './AppContext';
+import { AnnualData, TipologiaEnte } from '../types';
+import { Input } from './Input';
+import { Select } from './Select';
+import { Card } from './Card';
+import { EmployeeCountsForm } from './EmployeeCountsForm';
+import { ProventiSpecificiForm } from './ProventiSpecificiForm';
+import { TEXTS_UI, ALL_TIPOLOGIE_ENTE } from '../constants';
 
 const booleanOptions = [
   { value: 'true', label: TEXTS_UI.trueText },

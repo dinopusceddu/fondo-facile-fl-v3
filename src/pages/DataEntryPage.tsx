@@ -1,14 +1,14 @@
 // pages/DataEntryPage.tsx
 import React from 'react';
-import { HistoricalDataForm } from '../components/dataInput/HistoricalDataForm.js';
-import { AnnualDataForm } from '../components/dataInput/AnnualDataForm.js'; 
-import { EntityGeneralInfoForm } from '../components/dataInput/EntityGeneralInfoForm.js';
-import { Art23EmployeeAndIncrementForm } from '../components/dataInput/Art23EmployeeAndIncrementForm.js';
-import { SimulatoreIncrementoForm } from '../components/dataInput/SimulatoreIncrementoForm.js';
-import { Button } from '../components/shared/Button.js';
-import { useAppContext } from '../contexts/AppContext.js';
-import { TEXTS_UI } from '../constants.js';
-import { TipologiaEnte } from '../types.js';
+import { HistoricalDataForm } from '../components/dataInput/HistoricalDataForm';
+import { AnnualDataForm } from '../components/dataInput/AnnualDataForm';
+import { EntityGeneralInfoForm } from '../components/dataInput/EntityGeneralInfoForm';
+import { Art23EmployeeAndIncrementForm } from '../components/dataInput/Art23EmployeeAndIncrementForm';
+import { SimulatoreIncrementoForm } from '../components/dataInput/SimulatoreIncrementoForm';
+import { Button } from '../components/shared/Button';
+import { useAppContext } from '../contexts/AppContext';
+import { TEXTS_UI } from '../constants';
+import { TipologiaEnte } from '../types';
 
 export const DataEntryPage: React.FC = () => {
   const { state, performFundCalculation } = useAppContext();
