@@ -1,5 +1,5 @@
 // hooks/useSimulatoreCalculations.ts
-import { SimulatoreIncrementoInput, SimulatoreIncrementoRisultati, TipologiaEnte } from '../types';
+import { SimulatoreIncrementoInput, SimulatoreIncrementoRisultati, TipologiaEnte } from '../types.js';
 
 export const getSogliaSpesaPersonale = (numeroAbitanti?: number, tipologiaEnte?: TipologiaEnte): number => {
   if (numeroAbitanti === undefined || tipologiaEnte === undefined) return 0;

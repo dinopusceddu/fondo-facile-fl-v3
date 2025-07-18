@@ -1,11 +1,11 @@
 // components/dataInput/AnnualDataForm.tsx
 import React, { useEffect } from 'react';
-import { useAppContext } from '../../contexts/AppContext';
-import { AnnualData } from '../../types';
-import { Input } from '../shared/Input';
-import { Select } from '../shared/Select';
-import { Card } from '../shared/Card';
-import { TEXTS_UI } from '../../constants';
+import { useAppContext } from '../../contexts/AppContext.js';
+import { AnnualData } from '../../types.js';
+import { Input } from '../shared/Input.js';
+import { Select } from '../shared/Select.js';
+import { Card } from '../shared/Card.js';
+import { TEXTS_UI } from '../../constants.js'; 
 
 const booleanOptions = [
   { value: 'true', label: TEXTS_UI.trueText },

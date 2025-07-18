@@ -16,12 +16,12 @@ import {
     AnnualData,
     Art23EmployeeDetail,
     TipologiaEnte
-} from '../types';
+} from '../types.js';
 import { 
     fadFieldDefinitions, 
-} from '../pages/FondoAccessorioDipendentePageHelpers';
-import { TEXTS_UI, ALL_TIPOLOGIE_ENTE } from '../constants';
-import { getFadEffectiveValueHelper, calculateFadTotals } from '../logic/fundEngine';
+} from '../pages/FondoAccessorioDipendentePageHelpers.js';
+import { TEXTS_UI, ALL_TIPOLOGIE_ENTE } from '../constants.js'; 
+import { getFadEffectiveValueHelper, calculateFadTotals } from '../logic/fundEngine.js';
 
 
 // --- PDF Helper Functions ---

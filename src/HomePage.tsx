@@ -1,10 +1,10 @@
 // src/HomePage.tsx
 import React from 'react';
-import { useAppContext } from './AppContext';
-import { DashboardSummary } from './DashboardSummary';
-import { ComplianceStatusWidget } from './ComplianceStatusWidget';
-import { Button } from './Button';
-import { TEXTS_UI } from '../constants';
+import { useAppContext } from './AppContext.js';
+import { DashboardSummary } from './DashboardSummary.js';
+import { ComplianceStatusWidget } from './ComplianceStatusWidget.js';
+import { Button } from './Button.js';
+import { TEXTS_UI } from '../constants.js';
 
 export const HomePage: React.FC = () => {
   const { state, performFundCalculation } = useAppContext(); // removed dispatch as it's not directly used here.

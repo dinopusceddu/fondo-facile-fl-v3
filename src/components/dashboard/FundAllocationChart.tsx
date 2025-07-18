@@ -1,9 +1,9 @@
 // components/dashboard/FundAllocationChart.tsx
 import React from 'react';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { useAppContext } from '../../contexts/AppContext';
-import { Card } from '../shared/Card';
-import { TEXTS_UI } from '../../constants';
+import { useAppContext } from '../../contexts/AppContext.js';
+import { Card } from '../shared/Card.js';
+import { TEXTS_UI } from '../../constants.js';
 
 const formatCurrency = (value?: number) => {
     if (value === undefined || value === null || isNaN(value)) return TEXTS_UI.notApplicable;

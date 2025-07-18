@@ -1,9 +1,9 @@
 // src/CompliancePage.tsx
 import React from 'react';
-import { useAppContext } from './AppContext';
-import { Card } from './Card';
-import { TEXTS_UI } from '../constants';
-import { LoadingSpinner } from './LoadingSpinner';
+import { useAppContext } from './AppContext.js';
+import { Card } from './Card.js';
+import { TEXTS_UI } from '../constants.js';
+import { LoadingSpinner } from './LoadingSpinner.js';
 
 const getIconForGravita = (gravita: 'info' | 'warning' | 'error'): string => {
   if (gravita === 'error') return '❌';

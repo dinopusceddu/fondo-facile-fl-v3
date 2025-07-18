@@ -1,10 +1,10 @@
 // src/DataEntryPage.tsx
 import React from 'react';
-import { HistoricalDataForm } from './HistoricalDataForm';
-import { AnnualDataForm } from './AnnualDataForm';
-import { Button } from './Button';
-import { useAppContext } from './AppContext';
-import { TEXTS_UI } from '../constants';
+import { HistoricalDataForm } from './HistoricalDataForm.js';
+import { AnnualDataForm } from './AnnualDataForm.js';
+import { Button } from './Button.js';
+import { useAppContext } from './AppContext.js';
+import { TEXTS_UI } from '../constants.js';
 
 export const DataEntryPage: React.FC = () => {
   const { state, performFundCalculation } = useAppContext();

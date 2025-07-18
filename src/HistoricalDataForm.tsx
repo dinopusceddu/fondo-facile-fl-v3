@@ -1,10 +1,10 @@
 // src/HistoricalDataForm.tsx
 import React from 'react';
-import { useAppContext } from './AppContext';
-import { HistoricalData } from '../types';
-import { Input } from './Input';
-import { Card } from './Card';
-import { TEXTS_UI } from '../constants'; // TEXTS_UI is used for notApplicable
+import { useAppContext } from './AppContext.js';
+import { HistoricalData } from '../types.js';
+import { Input } from './Input.js';
+import { Card } from './Card.js';
+import { TEXTS_UI } from '../constants.js'; // TEXTS_UI is used for notApplicable
 
 export const HistoricalDataForm: React.FC = () => {
   const { state, dispatch } = useAppContext();

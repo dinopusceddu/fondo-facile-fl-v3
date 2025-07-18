@@ -8,10 +8,10 @@ import {
     FondoElevateQualificazioniData,
     FondoSegretarioComunaleData,
     FondoDirigenzaData
-} from '../types';
+} from '../types.js';
 import {
     calculateFadTotals,
-} from '../logic/fundEngine';
+} from '../logic/fundEngine.js';
 import {
   RIF_ART23_DLGS75_2017,
   VALORE_PROCAPITE_ART67_CCNL2018,
@@ -25,7 +25,7 @@ import {
   LIMITE_INCREMENTO_PNRR_DL13_2023,
   RIF_ART45_DLGS36_2023,
   RIF_ART208_CDS,
-} from '../constants';
+} from '../constants.js';
 
 export const calculateFundCompletely = (fundData: FundData): CalculatedFund => {
   const { 

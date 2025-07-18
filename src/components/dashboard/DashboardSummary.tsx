@@ -1,8 +1,8 @@
 // components/dashboard/DashboardSummary.tsx
 import React from 'react';
-import { CalculatedFund, HistoricalData } from '../../types';
-import { Card } from '../shared/Card';
-import { TEXTS_UI } from '../../constants';
+import { CalculatedFund, HistoricalData } from '../../types.js';
+import { Card } from '../shared/Card.js';
+import { TEXTS_UI } from '../../constants.js';
 
 interface DashboardSummaryProps {
   calculatedFund?: CalculatedFund;

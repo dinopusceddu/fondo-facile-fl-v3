@@ -1,7 +1,7 @@
 // components/layout/Header.tsx
 import React from 'react';
-import { useAppContext } from '../../contexts/AppContext';
-import { APP_NAME } from '../../constants';
+import { useAppContext } from '../../contexts/AppContext.js';
+import { APP_NAME } from '../../constants.js';
 
 interface HeaderProps {
   toggleSidebar: () => void;

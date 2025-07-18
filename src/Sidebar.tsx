@@ -1,7 +1,7 @@
 // src/Sidebar.tsx
 import React from 'react';
-import { PageModule } from '../types';
-import { useAppContext } from './AppContext';
+import { PageModule } from '../types.js';
+import { useAppContext } from './AppContext.js';
 
 interface SidebarProps {
   modules: PageModule[];

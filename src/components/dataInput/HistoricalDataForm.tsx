@@ -1,10 +1,10 @@
 // components/dataInput/HistoricalDataForm.tsx
 import React from 'react';
-import { useAppContext } from '../../contexts/AppContext';
-import { HistoricalData } from '../../types';
-import { Input } from '../shared/Input';
-import { Card } from '../shared/Card';
-import { TEXTS_UI } from '../../constants';
+import { useAppContext } from '../../contexts/AppContext.js';
+import { HistoricalData } from '../../types.js';
+import { Input } from '../shared/Input.js';
+import { Card } from '../shared/Card.js';
+import { TEXTS_UI } from '../../constants.js';
 
 export const HistoricalDataForm: React.FC = () => {
   const { state, dispatch } = useAppContext();

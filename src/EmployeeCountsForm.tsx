@@ -1,8 +1,8 @@
 // src/EmployeeCountsForm.tsx
 import React from 'react';
-import { useAppContext } from './AppContext';
-import { EmployeeCategory, ALL_EMPLOYEE_CATEGORIES } from '../types';
-import { Input } from './Input';
+import { useAppContext } from './AppContext.js';
+import { EmployeeCategory, ALL_EMPLOYEE_CATEGORIES } from '../types.js';
+import { Input } from './Input.js';
 
 interface EmployeeCountsFormProps {
   title: string;

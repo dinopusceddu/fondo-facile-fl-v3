@@ -1,10 +1,10 @@
 // src/FundDetailsPage.tsx
 import React from 'react';
-import { useAppContext } from './AppContext';
-import { Card } from './Card';
-import { FundComponent } from '../types';
-import { TEXTS_UI } from '../constants';
-import { LoadingSpinner } from './LoadingSpinner';
+import { useAppContext } from './AppContext.js';
+import { Card } from './Card.js';
+import { FundComponent } from '../types.js';
+import { TEXTS_UI } from '../constants.js';
+import { LoadingSpinner } from './LoadingSpinner.js';
 
 const formatCurrency = (value?: number) => {
   if (value === undefined || value === null) return TEXTS_UI.notApplicable;

@@ -12,9 +12,9 @@ import {
     FondoElevateQualificazioniData,
     FondoSegretarioComunaleData,
     FondoDirigenzaData
-} from '../types';
+} from '../types.js';
 
-import { fadFieldDefinitions } from '../pages/FondoAccessorioDipendentePageHelpers';
+import { fadFieldDefinitions } from '../pages/FondoAccessorioDipendentePageHelpers.js';
 
 import {
   RIF_ART23_DLGS75_2017,
@@ -29,7 +29,7 @@ import {
   LIMITE_INCREMENTO_PNRR_DL13_2023,
   RIF_ART45_DLGS36_2023,
   RIF_ART208_CDS,
-} from '../constants';
+} from '../constants.js';
 
 // --- FROM hooks/useSimulatoreCalculations.ts ---
 

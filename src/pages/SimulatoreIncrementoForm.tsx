@@ -1,11 +1,11 @@
 // components/dataInput/SimulatoreIncrementoForm.tsx
 import React, { useEffect, useCallback } from 'react';
-import { useAppContext } from '../../contexts/AppContext';
-import { SimulatoreIncrementoInput, TipologiaEnte } from '../../types';
-import { Input } from '../shared/Input';
-import { Card } from '../shared/Card';
-import { TEXTS_UI, RIF_ART14_DL25_2025, RIF_DM_17_03_2020, RIF_L296_06_C557 } from '../../constants';
-import { calculateSimulazione } from '../../logic/fundEngine';
+import { useAppContext } from '../../contexts/AppContext.js';
+import { SimulatoreIncrementoInput, TipologiaEnte } from '../../types.js';
+import { Input } from '../shared/Input.js';
+import { Card } from '../shared/Card.js';
+import { TEXTS_UI, RIF_ART14_DL25_2025, RIF_DM_17_03_2020, RIF_L296_06_C557 } from '../../constants.js';
+import { calculateSimulazione } from '../../logic/fundEngine.js';
 
 const formatCurrencyForDisplay = (value?: number) => {
   if (value === undefined || value === null || isNaN(value)) return TEXTS_UI.notApplicable;
