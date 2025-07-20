@@ -11,7 +11,8 @@ import {
     ComplianceCheck,
     FondoElevateQualificazioniData,
     FondoSegretarioComunaleData,
-    FondoDirigenzaData
+    FondoDirigenzaData,
+    DistribuzioneRisorseData
 } from '../types';
 
 import { fadFieldDefinitions } from '../pages/FondoAccessorioDipendentePageHelpers';
@@ -386,7 +387,6 @@ export const calculateFundCompletely = (fundData: FundData): CalculatedFund => {
   const totaleFondoRisorseDecentrate = totaleComponenteStabile + totaleComponenteVariabile;
 
   return {
-    // Legacy properties
     fondoBase2016: fondoBase2016_originale,
     incrementiStabiliCCNL,
     adeguamentoProCapite, 
@@ -399,15 +399,12 @@ export const calculateFundCompletely = (fundData: FundData): CalculatedFund => {
     superamentoLimite2016: superamentoDelLimite2016 > 0 ? superamentoDelLimite2016 : undefined,
     totaleRisorseSoggetteAlLimiteDaFondiSpecifici,
     
-    // New main totals
     totaleFondo: totaleFondoRisorseDecentrate,
     totaleParteStabile: totaleComponenteStabile,
     totaleParteVariabile: totaleComponenteVariabile,
-    
-    // Aliases for backward compatibility
     totaleComponenteStabile: totaleComponenteStabile,
     totaleComponenteVariabile: totaleComponenteVariabile,
-    
+
     dettaglioFondi: {
       dipendente: { stabile: fad_stabile, variabile: fad_variabile, totale: fad_totale },
       eq: { stabile: eq_stabile, variabile: eq_variabile, totale: eq_totale },
@@ -508,7 +505,7 @@ export const runAllComplianceChecks = (calculatedFund: CalculatedFund, fundData:
              (data.u_incrIndennitaScolastico || 0) +
              (data.u_indennitaEx8QF || 0);
       
-      const totaleAllocato = Object.values(data).reduce((sum, value) => sum + (value || 0), 0);
+      const totaleAllocato = Object.keys(data).reduce((sum, key) => sum + (data[key as keyof DistribuzioneRisorseData] || 0), 0);
       const importoRimanente = risorseDaDistribuire - totaleAllocato;
 
       if (utilizziParteStabile > risorseDaDistribuire) {

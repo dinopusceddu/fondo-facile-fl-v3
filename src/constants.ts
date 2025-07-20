@@ -1,5 +1,5 @@
 // constants.ts
-import { EmployeeCategory, UserRole, TipologiaEnte, SimulatoreIncrementoInput, FondoAccessorioDipendenteData, FondoElevateQualificazioniData, FondoSegretarioComunaleData, FondoDirigenzaData, LivelloPeo, TipoMaggiorazione, AreaQualifica, DistribuzioneRisorseData } from './types.js';
+import { EmployeeCategory, UserRole, TipologiaEnte, SimulatoreIncrementoInput, FondoAccessorioDipendenteData, FondoElevateQualificazioniData, FondoSegretarioComunaleData, FondoDirigenzaData, LivelloPeo, TipoMaggiorazione, AreaQualifica, DistribuzioneRisorseData } from './types';
 
 export const APP_NAME = "Salario accessorio Funzioni Locali";
 

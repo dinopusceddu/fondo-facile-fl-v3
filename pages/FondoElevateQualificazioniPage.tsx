@@ -1,10 +1,10 @@
 // pages/FondoElevateQualificazioniPage.tsx
 import React from 'react';
-import { useAppContext } from '../contexts/AppContext.js';
-import { FondoElevateQualificazioniData } from '../types.js';
-import { Card } from '../components/shared/Card.js';
-import { TEXTS_UI, RIF_ART17_CCNL2022, RIF_ART23_C5_CCNL2022, RIF_ART79_CCNL2022, RIF_ART23_DLGS75_2017, RIF_ART33_DL34_2019, RIF_DELIBERA_ENTE } from '../constants.js';
-import { FundingItem } from '../components/shared/FundingItem.js';
+import { useAppContext } from '../contexts/AppContext';
+import { FondoElevateQualificazioniData } from '../types';
+import { Card } from '../components/shared/Card';
+import { TEXTS_UI, RIF_ART17_CCNL2022, RIF_ART23_C5_CCNL2022, RIF_ART79_CCNL2022, RIF_ART23_DLGS75_2017, RIF_ART33_DL34_2019, RIF_DELIBERA_ENTE } from '../constants';
+import { FundingItem } from '../components/shared/FundingItem';
 
 
 const formatCurrency = (value?: number, defaultText = TEXTS_UI.notApplicable) => {

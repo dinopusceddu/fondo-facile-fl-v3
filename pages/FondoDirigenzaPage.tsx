@@ -1,10 +1,10 @@
 // pages/FondoDirigenzaPage.tsx
 import React, { useEffect } from 'react';
-import { useAppContext } from '../contexts/AppContext.js';
-import { FondoDirigenzaData } from '../types.js';
-import { Card } from '../components/shared/Card.js';
-import { TEXTS_UI, RIF_CCNL_DIR_17122020_ART57C2A, RIF_CCNL_DIR_17122020_ART56C1, RIF_CCNL_DIR_17122020_ART57C2C, RIF_CCNL_DIR_17122020_ART57C2E, RIF_CCNL_DIR_16072024_ART39C1, RIF_CCNL_DIR_17122020_ART57C2B, RIF_CCNL_DIR_17122020_ART57C2D, RIF_CCNL_DIR_17122020_ART57C3, RIF_ART8_DL13_2023, RIF_CCNL_DIR_16072024_ART39C2, RIF_ART33_DL34_2019, RIF_ART23_DLGS75_2017, RIF_DL16_2014_ART4 } from '../constants.js';
-import { FundingItem } from '../components/shared/FundingItem.js';
+import { useAppContext } from '../contexts/AppContext';
+import { FondoDirigenzaData } from '../types';
+import { Card } from '../components/shared/Card';
+import { TEXTS_UI, RIF_CCNL_DIR_17122020_ART57C2A, RIF_CCNL_DIR_17122020_ART56C1, RIF_CCNL_DIR_17122020_ART57C2C, RIF_CCNL_DIR_17122020_ART57C2E, RIF_CCNL_DIR_16072024_ART39C1, RIF_CCNL_DIR_17122020_ART57C2B, RIF_CCNL_DIR_17122020_ART57C2D, RIF_CCNL_DIR_17122020_ART57C3, RIF_ART8_DL13_2023, RIF_CCNL_DIR_16072024_ART39C2, RIF_ART33_DL34_2019, RIF_ART23_DLGS75_2017, RIF_DL16_2014_ART4 } from '../constants';
+import { FundingItem } from '../components/shared/FundingItem';
 
 const formatCurrency = (value?: number, defaultText = TEXTS_UI.notApplicable) => {
     if (value === undefined || value === null || isNaN(value)) return defaultText;

@@ -1,9 +1,9 @@
 // components/dashboard/FundAllocationChart.tsx
 import React from 'react';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { useAppContext } from '../../contexts/AppContext.js';
-import { Card } from '../shared/Card.js';
-import { TEXTS_UI } from '../../constants.js';
+import { useAppContext } from '../../contexts/AppContext';
+import { Card } from '../shared/Card';
+import { TEXTS_UI } from '../../constants';
 
 const formatCurrency = (value?: number) => {
     if (value === undefined || value === null || isNaN(value)) return TEXTS_UI.notApplicable;
@@ -14,7 +14,7 @@ export const FundAllocationChart: React.FC = () => {
   const { state } = useAppContext();
   const { calculatedFund } = state;
 
-  if (!calculatedFund || (calculatedFund.totaleParteStabile === 0 && calculatedFund.totaleParteVariabile === 0)) {
+  if (!calculatedFund || (calculatedFund.totaleComponenteStabile === 0 && calculatedFund.totaleComponenteVariabile === 0)) {
     return (
       <Card title="Ripartizione del Fondo">
         <div className="flex items-center justify-center h-64 text-[#5f5252]">
@@ -25,8 +25,8 @@ export const FundAllocationChart: React.FC = () => {
   }
 
   const data = [
-    { name: 'Parte Stabile', value: calculatedFund.totaleParteStabile || 0 },
-    { name: 'Parte Variabile', value: calculatedFund.totaleParteVariabile || 0 },
+    { name: 'Parte Stabile', value: calculatedFund.totaleComponenteStabile || 0 },
+    { name: 'Parte Variabile', value: calculatedFund.totaleComponenteVariabile || 0 },
   ];
 
   const COLORS = ['#94a3b8', '#ea2832']; // slate-400, primary-red

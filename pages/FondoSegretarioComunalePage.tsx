@@ -1,10 +1,10 @@
 // pages/FondoSegretarioComunalePage.tsx
 import React, { useEffect } from 'react';
-import { useAppContext } from '../contexts/AppContext.js';
-import { FondoSegretarioComunaleData } from '../types.js';
-import { Card } from '../components/shared/Card.js';
-import { TEXTS_UI, RIF_CCNL_SEG_01032011_ART3C6, RIF_CCNL_SEG_16072024_ART58C1, RIF_CCNL_SEG_16072024_ART60C1, RIF_CCNL_SEG_16072024_ART60C3, RIF_CCNL_SEG_16072024_ART60C5, RIF_CCNL_SEG_16072024_ART56C1G, RIF_CCNL_SEG_16072024_ART56C1H, RIF_CCNL_SEG_16072024_ART56C1F, RIF_CCNL_SEG_16072024_ART56C1I, RIF_ART8_DL13_2023, RIF_CCNL_SEG_16072024_ART61C2, RIF_CCNL_SEG_16072024_ART61C2BIS, RIF_CCNL_SEG_16072024_ART61C2TER, RIF_CCNL_SEG_16072024_ART61C3 } from '../constants.js';
-import { FundingItem } from '../components/shared/FundingItem.js';
+import { useAppContext } from '../contexts/AppContext';
+import { FondoSegretarioComunaleData } from '../types';
+import { Card } from '../components/shared/Card';
+import { TEXTS_UI, RIF_CCNL_SEG_01032011_ART3C6, RIF_CCNL_SEG_16072024_ART58C1, RIF_CCNL_SEG_16072024_ART60C1, RIF_CCNL_SEG_16072024_ART60C3, RIF_CCNL_SEG_16072024_ART60C5, RIF_CCNL_SEG_16072024_ART56C1G, RIF_CCNL_SEG_16072024_ART56C1H, RIF_CCNL_SEG_16072024_ART56C1F, RIF_CCNL_SEG_16072024_ART56C1I, RIF_ART8_DL13_2023, RIF_CCNL_SEG_16072024_ART61C2, RIF_CCNL_SEG_16072024_ART61C2BIS, RIF_CCNL_SEG_16072024_ART61C2TER, RIF_CCNL_SEG_16072024_ART61C3 } from '../constants';
+import { FundingItem } from '../components/shared/FundingItem';
 
 const formatCurrency = (value?: number, defaultText = TEXTS_UI.notApplicable) => {
     if (value === undefined || value === null || isNaN(value)) return defaultText;
