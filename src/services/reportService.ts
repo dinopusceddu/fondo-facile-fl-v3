@@ -6,22 +6,16 @@ import {
     FundData, 
     User, 
     FondoAccessorioDipendenteData, 
-    FondoElevateQualificazioniData,
-    FondoSegretarioComunaleData,
-    FondoDirigenzaData,
     ComplianceCheck,
     SimulatoreIncrementoInput,
     SimulatoreIncrementoRisultati,
-    HistoricalData,
-    AnnualData,
-    Art23EmployeeDetail,
     TipologiaEnte
-} from '../types.js';
+} from '../types.ts';
 import { 
     fadFieldDefinitions, 
-} from '../pages/FondoAccessorioDipendentePageHelpers.js';
-import { TEXTS_UI, ALL_TIPOLOGIE_ENTE } from '../constants.js'; 
-import { getFadEffectiveValueHelper, calculateFadTotals } from '../logic/fundEngine.js';
+} from '../pages/FondoAccessorioDipendentePageHelpers.ts';
+import { TEXTS_UI, ALL_TIPOLOGIE_ENTE } from '../constants.ts'; 
+import { getFadEffectiveValueHelper, calculateFadTotals } from '../logic/fundEngine.ts';
 
 
 // --- PDF Helper Functions ---
@@ -55,20 +49,6 @@ const addSubTitle = (doc: jsPDF, title: string) => {
     doc.text(title, MARGIN, CURRENT_Y);
     doc.setFont('helvetica', 'normal');
     CURRENT_Y += LINE_SPACING * 1.2;
-};
-
-const addText = (doc: jsPDF, text: string | string[], indent = 0) => {
-    const textArray = Array.isArray(text) ? text : [text];
-    textArray.forEach(line => {
-        const splitText = doc.splitTextToSize(line, doc.internal.pageSize.width - (MARGIN * 2) - indent);
-        splitText.forEach((sLine: string) => {
-            checkYAndAddPage(doc, LINE_SPACING);
-            doc.setFontSize(9);
-            doc.text(sLine, MARGIN + indent, CURRENT_Y);
-            CURRENT_Y += LINE_SPACING * 0.8;
-        });
-    });
-    CURRENT_Y += LINE_SPACING * 0.4;
 };
 
 const addKeyValueTable = (doc: jsPDF, data: Array<{ label: string; value: string | undefined }>, title?: string) => {
@@ -125,7 +105,7 @@ export const generateFullSummaryPDF = (
 ): void => {
     const doc = new jsPDF();
     CURRENT_Y = MARGIN;
-    const { annualData, historicalData, fondoAccessorioDipendenteData, fondoElevateQualificazioniData, fondoSegretarioComunaleData, fondoDirigenzaData } = fundData;
+    const { annualData, historicalData } = fundData;
 
     // Report Header
     doc.setFontSize(18);
@@ -148,101 +128,57 @@ export const generateFullSummaryPDF = (
     const infoGeneraliData = [
         { label: 'Denominazione Ente', value: annualData.denominazioneEnte },
         { label: 'Tipologia Ente', value: tipologiaEnteLabel },
-        { label: 'Altra Tipologia Ente (se specificato)', value: annualData.tipologiaEnte === TipologiaEnte.ALTRO ? annualData.altroTipologiaEnte : TEXTS_UI.notApplicable },
         { label: 'Numero Abitanti (31.12 anno prec.)', value: formatNumber(annualData.numeroAbitanti, 0) },
         { label: 'Ente in Dissesto Finanziario?', value: formatBoolean(annualData.isEnteDissestato) },
-        { label: 'Ente Strutturalmente Deficitario?', value: formatBoolean(annualData.isEnteStrutturalmenteDeficitario) },
-        { label: 'Ente in Piano di Riequilibrio?', value: formatBoolean(annualData.isEnteRiequilibrioFinanziario) },
         { label: 'Ente con Personale Dirigente?', value: formatBoolean(annualData.hasDirigenza) },
     ];
     addKeyValueTable(doc, infoGeneraliData, '1.1 Informazioni Generali Ente');
     
     const datiStorici2016Data = [
-        { label: 'Fondo Salario Accessorio Personale (non Dir/EQ) 2016', value: formatCurrency(historicalData.fondoSalarioAccessorioPersonaleNonDirEQ2016) },
-        { label: 'Fondo Elevate Qualificazioni (EQ) 2016', value: formatCurrency(historicalData.fondoElevateQualificazioni2016) },
-        { label: 'Fondo Dirigenza 2016', value: formatCurrency(historicalData.fondoDirigenza2016) },
-        { label: 'Risorse Segretario Comunale 2016', value: formatCurrency(historicalData.risorseSegretarioComunale2016) },
         { label: 'Limite Complessivo Originale 2016', value: formatCurrency(calculatedFund.fondoBase2016) },
     ];
     addKeyValueTable(doc, datiStorici2016Data, '1.2 Dati Storici per Limite Fondo 2016 (Art. 23 c.2)');
 
-    const fondoBase2018_perArt23 = (historicalData.fondoPersonaleNonDirEQ2018_Art23 || 0) + (historicalData.fondoEQ2018_Art23 || 0);
-    const datiBase2018Art23 = [
-        { label: 'Fondo Personale (non Dir/EQ) 2018 (per Art. 23c2)', value: formatCurrency(historicalData.fondoPersonaleNonDirEQ2018_Art23) },
-        { label: 'Fondo Elevate Qualificazioni (EQ) 2018 (per Art. 23c2)', value: formatCurrency(historicalData.fondoEQ2018_Art23) },
-        { label: 'Fondo Base 2018 Complessivo (per Art. 23c2)', value: formatCurrency(fondoBase2018_perArt23) },
-    ];
-    addKeyValueTable(doc, datiBase2018Art23, '1.3 Dati per Adeguamento Limite Fondo (Art. 23 c.2 - Base 2018)');
-
-    addSubTitle(doc, 'Personale in servizio al 31.12.2018 (ai fini Art. 23 c.2)');
-    const personale2018Body = annualData.personale2018PerArt23.map((emp, i) => [
-        (i + 1).toString(),
-        emp.matricola || '-',
-        formatPercentage(emp.partTimePercentage) || '100%',
-    ]);
-    autoTable(doc, {
-        startY: CURRENT_Y,
-        head: [['#', 'Matricola', '% Part-Time']],
-        body: personale2018Body,
-        theme: 'grid', headStyles: { fillColor: '#e0e7ff', textColor: '#1e3a8a', fontSize: 9, fontStyle: 'bold' as FontStyle }, bodyStyles: { fontSize: 8 },
-        didDrawPage: (data) => { CURRENT_Y = data.cursor?.y ? data.cursor.y + LINE_SPACING : MARGIN; }
-    });
-    CURRENT_Y = (doc as any).lastAutoTable.finalY + SECTION_SPACING * 0.5;
-
-    addSubTitle(doc, `Personale in servizio Anno ${annualData.annoRiferimento} (ai fini Art. 23 c.2)`);
-    const personaleAnnoRifBody = annualData.personaleAnnoRifPerArt23.map((emp, i) => [
-        (i + 1).toString(),
-        emp.matricola || '-',
-        formatPercentage(emp.partTimePercentage) || '100%',
-        formatNumber(emp.cedoliniEmessi, 0) || '12',
-    ]);
-    autoTable(doc, {
-        startY: CURRENT_Y,
-        head: [['#', 'Matricola', '% Part-Time', 'Cedolini Emessi (su 12)']],
-        body: personaleAnnoRifBody,
-        theme: 'grid', headStyles: { fillColor: '#e0e7ff', textColor: '#1e3a8a', fontSize: 9, fontStyle: 'bold' as FontStyle }, bodyStyles: { fontSize: 8 },
-        didDrawPage: (data) => { CURRENT_Y = data.cursor?.y ? data.cursor.y + LINE_SPACING : MARGIN; }
-    });
-    CURRENT_Y = (doc as any).lastAutoTable.finalY + SECTION_SPACING * 0.5;
-
-    const datiPNRR3 = [
-        { label: 'Rispetto Equilibrio Bilancio Anno Prec.?', value: formatBoolean(annualData.rispettoEquilibrioBilancioPrecedente) },
-        { label: 'Rispetto Parametri Debito Commerciale Anno Prec.?', value: formatBoolean(annualData.rispettoDebitoCommercialePrecedente) },
-        { label: 'Incidenza Salario Accessorio (Ultimo Rendiconto %)', value: formatPercentage(annualData.incidenzaSalarioAccessorioUltimoRendiconto) },
-        { label: 'Approvazione Rendiconto Anno Prec. nei Termini?', value: formatBoolean(annualData.approvazioneRendicontoPrecedente) },
-        { label: 'Fondo Stabile 2016 (per calcolo PNRR 3)', value: formatCurrency(annualData.fondoStabile2016PNRR) },
-        { label: 'Possibile Incremento PNRR3 (calcolato)', value: formatCurrency(annualData.calcolatoIncrementoPNRR3) },
-    ];
-    addKeyValueTable(doc, datiPNRR3, '1.4 Dati Annuali per Calcolo PNRR3');
-
     const si = annualData.simulatoreInput || {} as SimulatoreIncrementoInput;
     const inputSimulatoreData = [
         { label: 'Stipendi tabellari personale 31.12.2023', value: formatCurrency(si.simStipendiTabellari2023) },
-        { label: 'Comp. stabile Fondo anno applicazione (€)', value: formatCurrency(si.simFondoStabileAnnoApplicazione) },
-        { label: 'Risorse EQ anno applicazione (€)', value: formatCurrency(si.simRisorsePOEQAnnoApplicazione) },
         { label: 'Spesa di personale (Consuntivo 2023)', value: formatCurrency(si.simSpesaPersonaleConsuntivo2023) },
-        { label: 'Media Entrate Correnti 2021-23 (netto FCDE 2023)', value: formatCurrency(si.simMediaEntrateCorrenti2021_2023) },
-        { label: 'Tetto di spesa personale art. 1 c. 557 o c. 562 L. 296/06', value: formatCurrency(si.simTettoSpesaPersonaleL296_06) },
-        { label: 'Costo annuo nuove assunzioni PIAO (€)', value: formatCurrency(si.simCostoAnnuoNuoveAssunzioniPIAO) },
-        { label: 'Percentuale oneri sull\'incremento (%)', value: formatPercentage(si.simPercentualeOneriIncremento) },
+        { label: 'Media Entrate Correnti 2021-23', value: formatCurrency(si.simMediaEntrateCorrenti2021_2023) },
     ];
-    addKeyValueTable(doc, inputSimulatoreData, '1.5 Dati per Simulatore Incremento Potenziale');
+    addKeyValueTable(doc, inputSimulatoreData, '1.3 Dati Chiave per Simulatore Incremento Potenziale');
 
     // --- 2. RISULTATI ---
-    // (Aggiungere altre sezioni di output qui, es. Risultati Simulatore, Dettaglio Fondi, Compliance)
+    addSectionTitle(doc, '2. Risultati Calcolo Fondo');
+    const { dettaglioFondi } = calculatedFund;
+    const summaryBody = [
+        ['Fondo Personale Dipendente', formatCurrency(dettaglioFondi.dipendente.stabile), formatCurrency(dettaglioFondi.dipendente.variabile), formatCurrency(dettaglioFondi.dipendente.totale)],
+        ['Fondo Elevate Qualificazioni', formatCurrency(dettaglioFondi.eq.stabile), formatCurrency(dettaglioFondi.eq.variabile), formatCurrency(dettaglioFondi.eq.totale)],
+        ['Risorse Segretario Comunale', formatCurrency(dettaglioFondi.segretario.stabile), formatCurrency(dettaglioFondi.segretario.variabile), formatCurrency(dettaglioFondi.segretario.totale)],
+    ];
+    if(annualData.hasDirigenza) {
+        summaryBody.push(['Fondo Dirigenza', formatCurrency(dettaglioFondi.dirigenza.stabile), formatCurrency(dettaglioFondi.dirigenza.variabile), formatCurrency(dettaglioFondi.dirigenza.totale)]);
+    }
+     autoTable(doc, {
+        startY: CURRENT_Y,
+        head: [['Fondo', 'Parte Stabile (€)', 'Parte Variabile (€)', 'Totale (€)']],
+        body: summaryBody,
+        foot: [['TOTALE GENERALE', formatCurrency(calculatedFund.totaleComponenteStabile), formatCurrency(calculatedFund.totaleComponenteVariabile), formatCurrency(calculatedFund.totaleFondoRisorseDecentrate)]],
+        theme: 'grid', 
+        headStyles: { fillColor: '#994d51', textColor: '#fcf8f8', fontStyle: 'bold' as FontStyle }, 
+        footStyles: { fillColor: '#d1c0c1', textColor: '#1b0e0e', fontStyle: 'bold' as FontStyle, fontSize: 10},
+        didDrawPage: (data) => { CURRENT_Y = data.cursor?.y ? data.cursor.y + LINE_SPACING : MARGIN; }
+    });
+    CURRENT_Y = (doc as any).lastAutoTable.finalY + SECTION_SPACING;
     
-    // Esempio: Risultati Simulatore
     if (annualData.simulatoreRisultati) {
-        addSectionTitle(doc, '2. Risultati Simulatore Incremento');
+        addSubTitle(doc, '2.1 Risultati Simulatore Incremento');
         const sr = annualData.simulatoreRisultati;
         const risultatiSimulatoreData = [
             { label: 'Fase 1: Incremento Potenziale Lordo (Target 48%)', value: formatCurrency(sr.fase1_incrementoPotenzialeLordo) },
-            { label: 'Fase 2: Spazio Disponibile (Limite Sostenibilità)', value: formatCurrency(sr.fase2_spazioDisponibileDL34) },
-            { label: 'Fase 3: Margine Disponibile (Tetto Storico)', value: formatCurrency(sr.fase3_margineDisponibileL296_06) },
-            { label: 'Fase 4: Spazio Utilizzabile Lordo (minore dei 3)', value: formatCurrency(sr.fase4_spazioUtilizzabileLordo) },
+            { label: 'Fase 4: Spazio Utilizzabile Lordo (minore dei 3 limiti)', value: formatCurrency(sr.fase4_spazioUtilizzabileLordo) },
             { label: 'Fase 5: Incremento Netto Effettivo del Fondo', value: formatCurrency(sr.fase5_incrementoNettoEffettivoFondo) },
         ];
-        addKeyValueTable(doc, risultatiSimulatoreData, 'Riepilogo Fasi Simulatore');
+        addKeyValueTable(doc, risultatiSimulatoreData);
     }
 
     // --- 3. CONTROLLI DI CONFORMITÀ ---
@@ -461,48 +397,146 @@ export const generateFADXLS = (
     isEnteInCondizioniSpeciali: boolean,
     incrementoEQconRiduzioneDipendenti: number | undefined
 ): void => {
-    const headers = ["Sezione", "Descrizione", "Riferimento Normativo", "Importo (€)", "Rileva per Limite Art. 23?"];
-    
-    const rows: (string|number)[][] = [];
+    // 1. Calculate totals first
+    const fadTotals = calculateFadTotals(
+        fadData,
+        simulatoreRisultati,
+        isEnteInCondizioniSpeciali,
+        incrementoEQconRiduzioneDipendenti
+    );
 
-    fadFieldDefinitions.forEach(def => {
-        const effectiveValue = getFadEffectiveValueHelper(
-            def.key,
-            fadData[def.key],
-            def.isDisabledByCondizioniSpeciali,
-            isEnteInCondizioniSpeciali,
-            simulatoreRisultati,
-            incrementoEQconRiduzioneDipendenti
-        );
-        
-        const row = [
-            def.section.replace(/_/g, ' ').toUpperCase(),
-            def.description,
-            def.riferimento,
-            def.isSubtractor ? -effectiveValue : effectiveValue,
-            def.isRelevantToArt23Limit ? 'Sì' : 'No'
-        ];
-        rows.push(row);
-    });
+    // 2. Start building the HTML string
+    let html = `
+    <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+    <head>
+        <meta charset="UTF-8">
+        <title>Dettaglio Fondo Personale Dipendente ${annoRiferimento}</title>
+        <!--[if gte mso 9]>
+        <xml>
+            <x:ExcelWorkbook>
+                <x:ExcelWorksheets>
+                    <x:ExcelWorksheet>
+                        <x:Name>Fondo Dipendente</x:Name>
+                        <x:WorksheetOptions>
+                            <x:Print>
+                                <x:ValidPrinterInfo/>
+                                <x:PaperSizeIndex>9</x:PaperSizeIndex>
+                                <x:HorizontalResolution>600</x:HorizontalResolution>
+                                <x:VerticalResolution>600</x:VerticalResolution>
+                            </x:Print>
+                            <x:PageSetup>
+                                <x:Layout x:Orientation="Landscape"/>
+                                <x:Header x:Data="&C&B${'Dettaglio Fondo Personale Dipendente ' + annoRiferimento}"/>
+                                <x:Footer x:Data="&L&D &R&P di &N"/>
+                            </x:PageSetup>
+                        </x:WorksheetOptions>
+                    </x:ExcelWorksheet>
+                </x:ExcelWorksheets>
+            </x:ExcelWorkbook>
+        </xml>
+        <![endif]-->
+        <style>
+            body { font-family: Arial, sans-serif; }
+            table { border-collapse: collapse; width: 100%; }
+            th, td { border: 1px solid #dddddd; text-align: left; padding: 8px; vertical-align: middle;}
+            .header { background-color: #994d51; color: white; font-size: 1.2em; text-align: center; font-weight: bold; }
+            .section-header { background-color: #f3e7e8; font-weight: bold; page-break-before: always; }
+            .table-header { background-color: #d1c0c1; font-weight: bold; text-align: center; }
+            .subtractor { color: #c02128; }
+            .total-row td { background-color: #f3e7e8; font-weight: bold; }
+            .grand-total-row td { background-color: #d1c0c1; font-weight: bold; font-size: 1.1em;}
+            .currency { text-align: right; mso-number-format:'"€"\\ #,##0.00'; }
+            .text { mso-number-format:'@'; }
+            @media print {
+                .section-header { page-break-before: always; }
+            }
+        </style>
+    </head>
+    <body>
+        <table>
+            <tr>
+                <td colspan="4" class="header">Dettaglio Completo Fondo Accessorio Personale Dipendente ${annoRiferimento}</td>
+            </tr>
+            <tr>
+                <th class="table-header">Descrizione</th>
+                <th class="table-header">Riferimento Normativo</th>
+                <th class="table-header">Importo (€)</th>
+                <th class="table-header">Rileva per Limite Art. 23?</th>
+            </tr>
+    `;
 
-    const escapeCsvCell = (cell: any) => {
-        if (cell === undefined || cell === null) return '';
-        let cellString = String(cell);
-        if (cellString.includes('"') || cellString.includes(',') || cellString.includes('\n')) {
-            cellString = '"' + cellString.replace(/"/g, '""') + '"';
-        }
-        return cellString;
+    // Helper to format currency and handle subtractors
+    const formatCellCurrency = (value: number, isSubtractor: boolean = false) => {
+        const numValue = isSubtractor ? -Math.abs(value) : value;
+        return `<td class="currency ${isSubtractor ? 'subtractor' : ''}">${numValue.toFixed(2)}</td>`;
     };
 
-
-    let csvContent = headers.join(",") + "\n" 
-        + rows.map(row => row.map(escapeCsvCell).join(",")).join("\n");
+    const sections: Array<{
+        title: string;
+        sectionKey: (typeof fadFieldDefinitions)[number]['section'];
+        total: number;
+        totalLabel: string;
+    }> = [
+        { title: "Fonti di Finanziamento Stabili", sectionKey: 'stabili', total: fadTotals.sommaStabili_Dipendenti, totalLabel: "SOMMA RISORSE STABILI" },
+        { title: "Fonti di Finanziamento Variabili Soggette al Limite", sectionKey: 'vs_soggette', total: fadTotals.sommaVariabiliSoggette_Dipendenti, totalLabel: "SOMMA RISORSE VARIABILI SOGGETTE AL LIMITE" },
+        { title: "Fonti di Finanziamento Variabili Non Soggette al Limite", sectionKey: 'vn_non_soggette', total: fadTotals.sommaVariabiliNonSoggette_Dipendenti, totalLabel: "SOMMA RISORSE VARIABILI NON SOGGETTE AL LIMITE" },
+        { title: "Altre Risorse e Decurtazioni Finali", sectionKey: 'fin_decurtazioni', total: fadTotals.altreRisorseDecurtazioniFinali_Dipendenti, totalLabel: "SOMMA ALTRE DECURTAZIONI" },
+        { title: "Calcolo del rispetto dei limiti", sectionKey: 'cl_limiti', total: fadTotals.decurtazioniLimiteSalarioAccessorio_Dipendenti, totalLabel: "DECURTAZIONI TOTALI PER RISPETTO LIMITE" },
+    ];
     
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    sections.forEach(section => {
+        const sectionFields = fadFieldDefinitions.filter(def => def.section === section.sectionKey);
+        if (sectionFields.length > 0) {
+            html += `<tr><td colspan="4" class="section-header">${section.title.toUpperCase()}</td></tr>`;
+            sectionFields.forEach(def => {
+                const effectiveValue = getFadEffectiveValueHelper(
+                    def.key,
+                    fadData[def.key],
+                    def.isDisabledByCondizioniSpeciali,
+                    isEnteInCondizioniSpeciali,
+                    simulatoreRisultati,
+                    incrementoEQconRiduzioneDipendenti
+                );
+
+                html += `
+                    <tr>
+                        <td class="text">${typeof def.description === 'string' ? def.description : def.key}</td>
+                        <td class="text">${def.riferimento}</td>
+                        ${formatCellCurrency(effectiveValue, def.isSubtractor)}
+                        <td class="text" style="text-align: center;">${def.isRelevantToArt23Limit ? 'Sì' : 'No'}</td>
+                    </tr>
+                `;
+            });
+            // Section total
+            html += `
+                <tr class="total-row">
+                    <td colspan="3" style="text-align: right;">${section.totalLabel}</td>
+                    ${formatCellCurrency(section.total)}
+                </tr>
+            `;
+        }
+    });
+
+    // Grand Total
+    html += `
+        <tr class="grand-total-row">
+            <td colspan="3" style="text-align: right;">TOTALE RISORSE DISPONIBILI (FONDO PERSONALE DIPENDENTE)</td>
+            ${formatCellCurrency(fadTotals.totaleRisorseDisponibiliContrattazione_Dipendenti)}
+        </tr>
+    `;
+
+    // Close HTML
+    html += `
+        </table>
+    </body>
+    </html>
+    `;
+
+    const blob = new Blob([html], { type: 'application/vnd.ms-excel;charset=utf-8;' });
     const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
     link.setAttribute("href", url);
-    link.setAttribute("download", `Dettaglio_Fondo_Dipendente_${annoRiferimento}.csv`);
+    link.setAttribute("download", `Dettaglio_Fondo_Dipendente_${annoRiferimento}.xls`);
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();

@@ -321,7 +321,7 @@ export const PROGRESSION_ECONOMIC_VALUES: {
   [AreaQualifica.OPERATORE]: {
     [LivelloPeo.A6]: 1768.60,
     [LivelloPeo.A5]: 1408.93,
-    [LivelloPeo.A4]: 1001.22,
+    [LivelloPeo.A4]: 1001.12,
     [LivelloPeo.A3]: 659.65,
     [LivelloPeo.A2]: 258.85,
     [LivelloPeo.A1]: 0.00,

@@ -10,12 +10,12 @@ import {
     SimulatoreIncrementoInput,
     SimulatoreIncrementoRisultati,
     TipologiaEnte
-} from '../types';
+} from '../types.ts';
 import { 
     fadFieldDefinitions, 
-} from '../pages/FondoAccessorioDipendentePageHelpers';
-import { TEXTS_UI, ALL_TIPOLOGIE_ENTE } from '../constants'; 
-import { getFadEffectiveValueHelper, calculateFadTotals } from '../logic/fundEngine';
+} from '../pages/FondoAccessorioDipendentePageHelpers.ts';
+import { TEXTS_UI, ALL_TIPOLOGIE_ENTE } from '../constants.ts'; 
+import { getFadEffectiveValueHelper, calculateFadTotals } from '../logic/fundEngine.ts';
 
 
 // --- PDF Helper Functions ---

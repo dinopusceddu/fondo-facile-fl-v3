@@ -1,12 +1,12 @@
 // pages/DistribuzioneRisorsePage.tsx
 import React, { useMemo } from 'react';
-import { useAppContext } from '../contexts/AppContext';
-import { Card } from '../components/shared/Card';
-import { TEXTS_UI, distribuzioneFieldDefinitions } from '../constants';
-import { DistribuzioneRisorseData } from '../types';
-import { FundingItem } from '../components/shared/FundingItem';
-import { Button } from '../components/shared/Button';
-import { calculateFadTotals } from '../logic/fundEngine';
+import { useAppContext } from '../contexts/AppContext.tsx';
+import { Card } from '../components/shared/Card.tsx';
+import { TEXTS_UI, distribuzioneFieldDefinitions } from '../constants.ts';
+import { DistribuzioneRisorseData } from '../types.ts';
+import { FundingItem } from '../components/shared/FundingItem.tsx';
+import { Button } from '../components/shared/Button.tsx';
+import { calculateFadTotals } from '../logic/fundEngine.ts';
 
 const formatCurrency = (value?: number, defaultText = TEXTS_UI.notApplicable) => {
   if (value === undefined || value === null || isNaN(value)) return defaultText;

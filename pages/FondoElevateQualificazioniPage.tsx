@@ -1,4 +1,4 @@
-// pages/FondoElevatequalificazioniPage.tsx
+// pages/FondoElevateQualificazioniPage.tsx
 import React from 'react';
 import { useAppContext } from '../contexts/AppContext.tsx';
 import { FondoElevateQualificazioniData } from '../types.ts';
@@ -40,7 +40,7 @@ const CalculatedDisplayItem: React.FC<{ label: string; value?: number; infoText?
   );
 
 
-export const FondoElevatequalificazioniPage: React.FC = () => {
+export const FondoElevateQualificazioniPage: React.FC = () => {
   const { state, dispatch } = useAppContext();
   const data = state.fundData.fondoElevateQualificazioniData || {} as FondoElevateQualificazioniData;
 

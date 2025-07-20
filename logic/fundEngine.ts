@@ -13,9 +13,9 @@ import {
     FondoSegretarioComunaleData,
     FondoDirigenzaData,
     DistribuzioneRisorseData
-} from '../types';
+} from '../types.ts';
 
-import { fadFieldDefinitions } from '../pages/FondoAccessorioDipendentePageHelpers';
+import { fadFieldDefinitions } from '../pages/FondoAccessorioDipendentePageHelpers.ts';
 
 import {
   RIF_ART23_DLGS75_2017,
@@ -30,7 +30,7 @@ import {
   LIMITE_INCREMENTO_PNRR_DL13_2023,
   RIF_ART45_DLGS36_2023,
   RIF_ART208_CDS,
-} from '../constants';
+} from '../constants.ts';
 
 // --- FROM hooks/useSimulatoreCalculations.ts ---
 
@@ -505,7 +505,7 @@ export const runAllComplianceChecks = (calculatedFund: CalculatedFund, fundData:
              (data.u_incrIndennitaScolastico || 0) +
              (data.u_indennitaEx8QF || 0);
       
-      const totaleAllocato = Object.keys(data).reduce((sum, key) => sum + (data[key as keyof DistribuzioneRisorseData] || 0), 0);
+      const totaleAllocato = Object.values(data).reduce((sum, value) => sum + (value || 0), 0);
       const importoRimanente = risorseDaDistribuire - totaleAllocato;
 
       if (utilizziParteStabile > risorseDaDistribuire) {
