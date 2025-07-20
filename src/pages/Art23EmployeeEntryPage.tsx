@@ -1,10 +1,10 @@
 // pages/Art23EmployeeEntryPage.tsx
 import React from 'react';
-import { useAppContext } from '../contexts/AppContext.js';
-import { Art23EmployeeDetail } from '../types.js';
-import { Input } from '../components/shared/Input.js';
-import { Button } from '../components/shared/Button.js';
-import { TEXTS_UI } from '../constants.js';
+import { useAppContext } from '../contexts/AppContext.tsx';
+import { Art23EmployeeDetail } from '../types.ts';
+import { Input } from '../components/shared/Input.tsx';
+import { Button } from '../components/shared/Button.tsx';
+import { TEXTS_UI } from '../constants.ts';
 
 interface EmployeeTableProps {
   yearType: '2018' | 'annoRif';

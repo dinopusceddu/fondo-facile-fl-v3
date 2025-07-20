@@ -1,11 +1,11 @@
 // components/dataInput/AnnualDataForm.tsx
 import React, { useEffect } from 'react';
-import { useAppContext } from '../../contexts/AppContext.js';
-import { AnnualData } from '../../types.js';
-import { Input } from '../shared/Input.js';
-import { Select } from '../shared/Select.js';
-import { Card } from '../shared/Card.js';
-import { TEXTS_UI } from '../../constants.js'; 
+import { useAppContext } from '../../contexts/AppContext.tsx';
+import { AnnualData } from '../../types.ts';
+import { Input } from '../shared/Input.tsx';
+import { Select } from '../shared/Select.tsx';
+import { Card } from '../shared/Card.tsx';
+import { TEXTS_UI } from '../../constants.ts'; 
 
 const booleanOptions = [
   { value: 'true', label: TEXTS_UI.trueText },
@@ -46,6 +46,15 @@ export const AnnualDataForm: React.FC = () => {
     incidenzaSalarioAccessorioUltimoRendiconto,
     fondoStabile2016PNRR
   } = annualData;
+  
+  // Validation logic
+  const incidenzaError = incidenzaSalarioAccessorioUltimoRendiconto !== undefined && incidenzaSalarioAccessorioUltimoRendiconto < 0 
+    ? "Il valore non può essere negativo." 
+    : undefined;
+  
+  const fondoStabileError = fondoStabile2016PNRR !== undefined && fondoStabile2016PNRR < 0 
+    ? "Il valore non può essere negativo." 
+    : undefined;
 
   const isEquilibrioOk = rispettoEquilibrioBilancioPrecedente === true;
   const isDebitoOk = rispettoDebitoCommercialePrecedente === true;
@@ -85,7 +94,7 @@ export const AnnualDataForm: React.FC = () => {
 
   return (
     <>
-      <Card title="Calcolo Incremento Variabile PNRR 3" className="mb-8">
+      <Card title="Calcolo Incremento Variabile PNRR 3" className="mb-8" isCollapsible={true} defaultCollapsed={true}>
         <p className="text-sm text-[#5f5252] mb-4">
             Questa sezione permette di calcolare il potenziale incremento variabile del fondo ai sensi dell'Art. 8, c.3 del D.L. 13/2023, basato sul rispetto di specifici indicatori di virtuosità finanziaria.
         </p>
@@ -126,6 +135,7 @@ export const AnnualDataForm: React.FC = () => {
             max="100"
             aria-required="true"
             containerClassName="mb-3"
+            error={incidenzaError}
           />
           <Select
             label="Approvazione Rendiconto Anno Precedente nei Termini?"
@@ -149,8 +159,10 @@ export const AnnualDataForm: React.FC = () => {
             onChange={handleChange}
             placeholder="Es. 100000.00"
             step="0.01"
+            min="0"
             containerClassName="mt-4 mb-3"
             aria-required="true"
+            error={fondoStabileError}
         />
 
         <div className="mt-6 p-4 bg-[#f3e7e8] border border-[#f3e7e8] rounded-lg">

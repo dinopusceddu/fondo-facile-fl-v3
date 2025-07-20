@@ -1,10 +1,8 @@
-
-
 // components/dataInput/EmployeeCountsForm.tsx
 import React from 'react';
-import { useAppContext } from '../../contexts/AppContext.js';
-import { EmployeeCategory, ALL_EMPLOYEE_CATEGORIES } from '../../types.js';
-import { Input } from '../shared/Input.js';
+import { useAppContext } from '../../contexts/AppContext.tsx';
+import { EmployeeCategory, ALL_EMPLOYEE_CATEGORIES } from '../../types.ts';
+import { Input } from '../shared/Input.tsx';
 
 interface EmployeeCountsFormProps {
   title: string;
@@ -16,9 +14,9 @@ export const EmployeeCountsForm: React.FC<EmployeeCountsFormProps> = ({ title })
 
   const handleChange = (category: EmployeeCategory, value: string) => {
     const count = value === '' ? undefined : parseInt(value, 10);
-    // if (count !== undefined && isNaN(count)) return; // Allow undefined, prevent NaN for actual numbers
+    if (count !== undefined && isNaN(count)) return;
 
-    dispatch({ type: 'UPDATE_EMPLOYEE_COUNT', payload: { category, count: (count !== undefined && isNaN(count)) ? 0 : count as number } }); // Ensure count is a number or undefined
+    dispatch({ type: 'UPDATE_EMPLOYEE_COUNT', payload: { category, count } });
   };
 
   return (

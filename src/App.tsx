@@ -8,7 +8,7 @@ import { FundDetailsPage } from './pages/FundDetailsPage.tsx';
 import { CompliancePage } from './pages/CompliancePage.tsx';
 import { ReportsPage } from './pages/ReportsPage.tsx';
 import { FondoAccessorioDipendentePage } from './pages/FondoAccessorioDipendentePage.tsx';
-import { FondoElevateQualificazioniPage } from './pages/FondoElevateQualificazioniPage.tsx';
+import { FondoElevatequalificazioniPage } from './pages/FondoElevateQualificazioniPage.tsx';
 import { FondoSegretarioComunalePage } from './pages/FondoSegretarioComunalePage.tsx';
 import { FondoDirigenzaPage } from './pages/FondoDirigenzaPage.tsx'; 
 import { ChecklistPage } from './pages/ChecklistPage.tsx'; 
@@ -25,7 +25,7 @@ const allPageModules: PageModule[] = [
   { id: 'benvenuto', name: 'Benvenuto!', component: HomePage }, 
   { id: 'dataEntry', name: 'Dati Costituzione Fondo', component: DataEntryPage },
   { id: 'fondoAccessorioDipendente', name: 'Fondo Accessorio Personale', component: FondoAccessorioDipendentePage },
-  { id: 'fondoElevateQualificazioni', name: 'Fondo Elevate Qualificazioni', component: FondoElevateQualificazioniPage },
+  { id: 'fondoElevateQualificazioni', name: 'Fondo Elevate Qualificazioni', component: FondoElevatequalificazioniPage },
   { id: 'fondoSegretarioComunale', name: 'Risorse Segretario Comunale', component: FondoSegretarioComunalePage },
   { id: 'fondoDirigenza', name: 'Fondo Dirigenza', component: FondoDirigenzaPage },
   { id: 'personaleServizio', name: 'Personale in servizio', component: PersonaleServizioPage },
