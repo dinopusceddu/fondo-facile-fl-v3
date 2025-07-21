@@ -1,12 +1,12 @@
 // pages/PersonaleServizioPage.tsx
 import React, { useMemo, useState, useEffect } from 'react';
-import { useAppContext } from '../contexts/AppContext.js';
-import { PersonaleServizioDettaglio, LivelloPeo, TipoMaggiorazione, AreaQualifica } from '../types.js';
-import { Card } from '../components/shared/Card.js';
-import { Input } from '../components/shared/Input.js';
-import { Select } from '../components/shared/Select.js';
-import { Button } from '../components/shared/Button.js';
-import { TEXTS_UI, ALL_AREE_QUALIFICA, PROGRESSION_ECONOMIC_VALUES, INDENNITA_COMPARTO_VALUES, ALL_TIPI_MAGGIORAZIONE } from '../constants.js';
+import { useAppContext } from '../contexts/AppContext';
+import { PersonaleServizioDettaglio, LivelloPeo, TipoMaggiorazione, AreaQualifica } from '../types';
+import { Card } from '../components/shared/Card';
+import { Input } from '../components/shared/Input';
+import { Select } from '../components/shared/Select';
+import { Button } from '../components/shared/Button';
+import { TEXTS_UI, ALL_AREE_QUALIFICA, PROGRESSION_ECONOMIC_VALUES, INDENNITA_COMPARTO_VALUES, ALL_TIPI_MAGGIORAZIONE } from '../constants';
 
 const NESSUNA_PEO_VALUE = ""; // Sentinel value for "Nessuna PEO"
 

@@ -1,11 +1,11 @@
 // components/dataInput/EntityGeneralInfoForm.tsx
 import React from 'react';
-import { useAppContext } from '../../contexts/AppContext.js';
-import { AnnualData, TipologiaEnte } from '../../types.js';
-import { Input } from '../shared/Input.js';
-import { Select } from '../shared/Select.js';
-import { Card } from '../shared/Card.js';
-import { TEXTS_UI, ALL_TIPOLOGIE_ENTE } from '../../constants.js';
+import { useAppContext } from '../../contexts/AppContext.tsx';
+import { AnnualData, TipologiaEnte } from '../../types.ts';
+import { Input } from '../shared/Input.tsx';
+import { Select } from '../shared/Select.tsx';
+import { Card } from '../shared/Card.tsx';
+import { TEXTS_UI, ALL_TIPOLOGIE_ENTE } from '../../constants.ts';
 
 const booleanOptions = [
   { value: 'true', label: TEXTS_UI.trueText },

@@ -1,10 +1,10 @@
 // components/dashboard/ComplianceStatusWidget.tsx
 import React from 'react';
-import { ComplianceCheck } from '../../types.js';
-import { Card } from '../shared/Card.js';
-import { TEXTS_UI } from '../../constants.js';
-import { useAppContext } from '../../contexts/AppContext.js';
-import { Button } from '../shared/Button.js'; // Import Button for "Vedi dettagli"
+import { ComplianceCheck } from '../../types.ts';
+import { Card } from '../shared/Card.tsx';
+import { TEXTS_UI } from '../../constants.ts';
+import { useAppContext } from '../../contexts/AppContext.tsx';
+import { Button } from '../shared/Button.tsx'; // Import Button for "Vedi dettagli"
 
 interface ComplianceStatusWidgetProps {
   complianceChecks: ComplianceCheck[];

@@ -2,23 +2,23 @@
 import React, { useEffect } from 'react';
 
 // Importazioni aggiornate per puntare alle directory corrette e con estensione corretta
-import { HomePage } from './pages/HomePage';
-import { DataEntryPage } from './pages/DataEntryPage';
-import { FundDetailsPage } from './pages/FundDetailsPage';
-import { CompliancePage } from './pages/CompliancePage';
-import { ReportsPage } from './pages/ReportsPage';
-import { FondoAccessorioDipendentePage } from './pages/FondoAccessorioDipendentePage';
-import { FondoElevateQualificazioniPage } from './pages/FondoElevateQualificazioniPage';
-import { FondoSegretarioComunalePage } from './pages/FondoSegretarioComunalePage';
-import { FondoDirigenzaPage } from './pages/FondoDirigenzaPage'; 
-import { ChecklistPage } from './pages/ChecklistPage'; 
-import { PersonaleServizioPage } from './pages/PersonaleServizioPage';
-import { DistribuzioneRisorsePage } from './pages/DistribuzioneRisorsePage'; // NUOVA PAGINA
+import { HomePage } from './pages/HomePage.tsx';
+import { DataEntryPage } from './pages/DataEntryPage.tsx';
+import { FundDetailsPage } from './pages/FundDetailsPage.tsx';
+import { CompliancePage } from './pages/CompliancePage.tsx';
+import { ReportsPage } from './pages/ReportsPage.tsx';
+import { FondoAccessorioDipendentePage } from './pages/FondoAccessorioDipendentePage.tsx';
+import { FondoElevateQualificazioniPage } from './pages/FondoElevateQualificazioniPage.tsx';
+import { FondoSegretarioComunalePage } from './pages/FondoSegretarioComunalePage.tsx';
+import { FondoDirigenzaPage } from './pages/FondoDirigenzaPage.tsx'; 
+import { ChecklistPage } from './pages/ChecklistPage.tsx'; 
+import { PersonaleServizioPage } from './pages/PersonaleServizioPage.tsx';
+import { DistribuzioneRisorsePage } from './pages/DistribuzioneRisorsePage.tsx';
 
-import { AppProvider, useAppContext } from './contexts/AppContext';
-import { MainLayout } from './components/layout/MainLayout';
-import { PageModule } from './types';
-import { LoadingSpinner } from './components/shared/LoadingSpinner';
+import { AppProvider, useAppContext } from './contexts/AppContext.tsx';
+import { MainLayout } from './components/layout/MainLayout.tsx';
+import { PageModule } from './types.ts';
+import { LoadingSpinner } from './components/shared/LoadingSpinner.tsx';
 
 
 const allPageModules: PageModule[] = [
@@ -29,7 +29,7 @@ const allPageModules: PageModule[] = [
   { id: 'fondoSegretarioComunale', name: 'Risorse Segretario Comunale', component: FondoSegretarioComunalePage },
   { id: 'fondoDirigenza', name: 'Fondo Dirigenza', component: FondoDirigenzaPage },
   { id: 'personaleServizio', name: 'Personale in servizio', component: PersonaleServizioPage },
-  { id: 'distribuzioneRisorse', name: 'Distribuzione Risorse', component: DistribuzioneRisorsePage }, // NUOVA PAGINA
+  { id: 'distribuzioneRisorse', name: 'Distribuzione Risorse', component: DistribuzioneRisorsePage },
   { id: 'fundDetails', name: 'Dettaglio Fondo Calcolato', component: FundDetailsPage },
   { id: 'compliance', name: 'Conformità', component: CompliancePage },
   { id: 'checklist', name: 'Check list Interattiva', component: ChecklistPage },

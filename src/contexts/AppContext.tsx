@@ -1,9 +1,8 @@
 // contexts/AppContext.tsx
 import React, { createContext, useReducer, Dispatch, useContext, useCallback } from 'react';
-import { AppState, AppAction, UserRole, FundData, CalculatedFund, ComplianceCheck, ProventoSpecifico, EmployeeCategory, Art23EmployeeDetail, SimulatoreIncrementoInput, FondoAccessorioDipendenteData, FondoElevateQualificazioniData, FondoSegretarioComunaleData, FondoDirigenzaData, SimulatoreIncrementoRisultati, PersonaleServizioDettaglio, LivelloPeo, TipoMaggiorazione, AreaQualifica, DistribuzioneRisorseData } from '../types.js';
-import { DEFAULT_CURRENT_YEAR, INITIAL_HISTORICAL_DATA, INITIAL_ANNUAL_DATA, DEFAULT_USER, INITIAL_FONDO_ACCESSORIO_DIPENDENTE_DATA, INITIAL_FONDO_ELEVATE_QUALIFICAZIONI_DATA, INITIAL_FONDO_SEGRETARIO_COMUNALE_DATA, INITIAL_FONDO_DIRIGENZA_DATA, INITIAL_DISTRIBUZIONE_RISORSE_DATA } from '../constants.js';
-import { calculateFundCompletely } from '../logic/fundEngine.js'; 
-import { runAllComplianceChecks } from '../logic/fundEngine.js'; 
+import { AppState, AppAction, UserRole, FundData, CalculatedFund, ComplianceCheck, ProventoSpecifico, EmployeeCategory, Art23EmployeeDetail, SimulatoreIncrementoInput, FondoAccessorioDipendenteData, FondoElevateQualificazioniData, FondoSegretarioComunaleData, FondoDirigenzaData, SimulatoreIncrementoRisultati, PersonaleServizioDettaglio, LivelloPeo, TipoMaggiorazione, AreaQualifica, DistribuzioneRisorseData } from '../types.ts';
+import { DEFAULT_CURRENT_YEAR, INITIAL_HISTORICAL_DATA, INITIAL_ANNUAL_DATA, DEFAULT_USER, INITIAL_FONDO_ACCESSORIO_DIPENDENTE_DATA, INITIAL_FONDO_ELEVATE_QUALIFICAZIONI_DATA, INITIAL_FONDO_SEGRETARIO_COMUNALE_DATA, INITIAL_FONDO_DIRIGENZA_DATA, INITIAL_DISTRIBUZIONE_RISORSE_DATA } from '../constants.ts';
+import { calculateFundCompletely, runAllComplianceChecks } from '../logic/fundEngine.ts'; 
 
 const LOCAL_STORAGE_KEY = 'salario-accessorio-app-state';
 
@@ -81,6 +80,13 @@ const appReducer = (state: AppState, action: AppAction): AppState => {
       return { ...state, fundData: { ...state.fundData, historicalData: { ...state.fundData.historicalData, ...action.payload } } };
     case 'UPDATE_ANNUAL_DATA':
       return { ...state, fundData: { ...state.fundData, annualData: { ...state.fundData.annualData, ...action.payload } } };
+    case 'UPDATE_EMPLOYEE_COUNT': 
+      {
+        const newCounts = state.fundData.annualData.personaleServizioAttuale.map(emp =>
+          emp.category === action.payload.category ? { ...emp, count: action.payload.count } : emp
+        );
+        return { ...state, fundData: { ...state.fundData, annualData: { ...state.fundData.annualData, personaleServizioAttuale: newCounts }}};
+      }
     case 'UPDATE_SIMULATORE_INPUT':
       return { 
         ...state, 
@@ -172,13 +178,6 @@ const appReducer = (state: AppState, action: AppAction): AppState => {
           } as DistribuzioneRisorseData
         }
       };
-    case 'UPDATE_EMPLOYEE_COUNT': 
-      {
-        const newCounts = state.fundData.annualData.personaleServizioAttuale.map(emp =>
-          emp.category === action.payload.category ? { ...emp, count: action.payload.count } : emp
-        );
-        return { ...state, fundData: { ...state.fundData, annualData: { ...state.fundData.annualData, personaleServizioAttuale: newCounts }}};
-      }
     case 'ADD_PROVENTO_SPECIFICO':
       return { ...state, fundData: { ...state.fundData, annualData: { ...state.fundData.annualData, proventiSpecifici: [...state.fundData.annualData.proventiSpecifici, action.payload] }}};
     case 'UPDATE_PROVENTO_SPECIFICO':

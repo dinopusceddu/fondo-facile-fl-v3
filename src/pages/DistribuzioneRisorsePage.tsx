@@ -1,11 +1,12 @@
 // pages/DistribuzioneRisorsePage.tsx
-import React, { useMemo, useEffect } from 'react';
-import { useAppContext } from '../contexts/AppContext.js';
-import { Card } from '../components/shared/Card.js';
-import { TEXTS_UI, distribuzioneFieldDefinitions } from '../constants.js';
-import { DistribuzioneRisorseData } from '../types.js';
-import { FundingItem } from '../components/shared/FundingItem.js';
-import { Button } from '../components/shared/Button.js';
+import React, { useMemo } from 'react';
+import { useAppContext } from '../contexts/AppContext.tsx';
+import { Card } from '../components/shared/Card.tsx';
+import { TEXTS_UI, distribuzioneFieldDefinitions } from '../constants.ts';
+import { DistribuzioneRisorseData } from '../types.ts';
+import { FundingItem } from '../components/shared/FundingItem.tsx';
+import { Button } from '../components/shared/Button.tsx';
+import { calculateFadTotals } from '../logic/fundEngine.ts';
 
 const formatCurrency = (value?: number, defaultText = TEXTS_UI.notApplicable) => {
   if (value === undefined || value === null || isNaN(value)) return defaultText;
@@ -40,12 +41,31 @@ export const DistribuzioneRisorsePage: React.FC = () => {
 
   const {
     distribuzioneRisorseData,
+    fondoAccessorioDipendenteData,
+    annualData,
+    fondoElevateQualificazioniData,
   } = fundData;
+  
+  const { 
+    simulatoreRisultati, 
+    isEnteDissestato,
+    isEnteStrutturalmenteDeficitario,
+    isEnteRiequilibrioFinanziario,
+  } = annualData;
+  
+  const isEnteInCondizioniSpeciali = !!isEnteDissestato || !!isEnteStrutturalmenteDeficitario || !!isEnteRiequilibrioFinanziario;
+  const incrementoEQconRiduzioneDipendenti = fondoElevateQualificazioniData?.ris_incrementoConRiduzioneFondoDipendenti;
 
-  // Totale da Distribuire = TOTALE RISORSE DISPONIBILI: nella pagina Fondo accessorio personale dipendente
-  const totaleDaDistribuire = calculatedFund.dettaglioFondi.dipendente.totale;
+  const fadTotals = useMemo(() => calculateFadTotals(
+    fondoAccessorioDipendenteData, 
+    simulatoreRisultati, 
+    isEnteInCondizioniSpeciali, 
+    incrementoEQconRiduzioneDipendenti
+  ), [fondoAccessorioDipendenteData, simulatoreRisultati, isEnteInCondizioniSpeciali, incrementoEQconRiduzioneDipendenti]);
 
-  // Handle changes to allocation inputs
+  const totaleDaDistribuire = fadTotals.totaleRisorseDisponibiliContrattazione_Dipendenti;
+
+
   const handleChange = (field: keyof DistribuzioneRisorseData, value?: number) => {
     dispatch({ type: 'UPDATE_DISTRIBUZIONE_RISORSE_DATA', payload: { [field]: value } });
   };
@@ -66,20 +86,16 @@ export const DistribuzioneRisorsePage: React.FC = () => {
       .reduce((sum, key) => sum + (data[key as keyof DistribuzioneRisorseData] || 0), 0);
   }, [distribuzioneRisorseData]);
 
-  // Totale Allocato = Utilizzi Parte Stabile (Art. 80 c.1) + Utilizzi Parte Variabile (Art. 80 c.2)
   const totaleAllocato = useMemo(() => {
     return utilizziParteStabile + utilizziParteVariabile;
   }, [utilizziParteStabile, utilizziParteVariabile]);
 
-  // Importo Rimanente = Totale da Distribuire - Totale Allocato
   const importoRimanente = totaleDaDistribuire - totaleAllocato;
 
-  // Importo disponibile alla contrattazione = Totale da Distribuire - Utilizzi Parte Stabile (Art. 80 c.1)
   const importoDisponibileContrattazione = useMemo(() => {
     return totaleDaDistribuire - utilizziParteStabile;
   }, [totaleDaDistribuire, utilizziParteStabile]);
 
-  // Group fields by section
   const sections = useMemo(() => 
     distribuzioneFieldDefinitions.reduce((acc, field) => {
       (acc[field.section] = acc[field.section] || []).push(field);
@@ -88,7 +104,7 @@ export const DistribuzioneRisorsePage: React.FC = () => {
   , []);
 
   return (
-    <div className="space-y-8 pb-24"> {/* Padding bottom for sticky bar */}
+    <div className="space-y-8 pb-24">
       <h2 className="text-[#1b0e0e] tracking-light text-2xl sm:text-[30px] font-bold leading-tight">Distribuzione delle Risorse del Fondo</h2>
       
       <Card title="Riepilogo Risorse e Allocazione" className="sticky top-[63px] z-30 bg-white/90 backdrop-blur-sm border-b-2">

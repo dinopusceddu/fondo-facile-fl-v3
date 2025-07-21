@@ -11,10 +11,11 @@ import {
     ComplianceCheck,
     FondoElevateQualificazioniData,
     FondoSegretarioComunaleData,
-    FondoDirigenzaData
-} from '../types';
+    FondoDirigenzaData,
+    DistribuzioneRisorseData
+} from '../types.ts';
 
-import { fadFieldDefinitions } from '../pages/FondoAccessorioDipendentePageHelpers';
+import { fadFieldDefinitions } from '../pages/FondoAccessorioDipendentePageHelpers.ts';
 
 import {
   RIF_ART23_DLGS75_2017,
@@ -29,7 +30,7 @@ import {
   LIMITE_INCREMENTO_PNRR_DL13_2023,
   RIF_ART45_DLGS36_2023,
   RIF_ART208_CDS,
-} from '../constants';
+} from '../constants.ts';
 
 // --- FROM hooks/useSimulatoreCalculations.ts ---
 
@@ -386,7 +387,6 @@ export const calculateFundCompletely = (fundData: FundData): CalculatedFund => {
   const totaleFondoRisorseDecentrate = totaleComponenteStabile + totaleComponenteVariabile;
 
   return {
-    // Legacy properties
     fondoBase2016: fondoBase2016_originale,
     incrementiStabiliCCNL,
     adeguamentoProCapite, 
@@ -399,15 +399,12 @@ export const calculateFundCompletely = (fundData: FundData): CalculatedFund => {
     superamentoLimite2016: superamentoDelLimite2016 > 0 ? superamentoDelLimite2016 : undefined,
     totaleRisorseSoggetteAlLimiteDaFondiSpecifici,
     
-    // New main totals
     totaleFondo: totaleFondoRisorseDecentrate,
     totaleParteStabile: totaleComponenteStabile,
     totaleParteVariabile: totaleComponenteVariabile,
-    
-    // Aliases for backward compatibility
     totaleComponenteStabile: totaleComponenteStabile,
     totaleComponenteVariabile: totaleComponenteVariabile,
-    
+
     dettaglioFondi: {
       dipendente: { stabile: fad_stabile, variabile: fad_variabile, totale: fad_totale },
       eq: { stabile: eq_stabile, variabile: eq_variabile, totale: eq_totale },

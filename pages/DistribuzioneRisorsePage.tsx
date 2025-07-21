@@ -1,11 +1,12 @@
 // pages/DistribuzioneRisorsePage.tsx
 import React, { useMemo } from 'react';
-import { useAppContext } from '../contexts/AppContext.js';
-import { Card } from '../components/shared/Card.js';
-import { TEXTS_UI, distribuzioneFieldDefinitions } from '../constants.js';
-import { DistribuzioneRisorseData } from '../types.js';
-import { FundingItem } from '../components/shared/FundingItem.js';
-import { Button } from '../components/shared/Button.js';
+import { useAppContext } from '../contexts/AppContext.tsx';
+import { Card } from '../components/shared/Card.tsx';
+import { TEXTS_UI, distribuzioneFieldDefinitions } from '../constants.ts';
+import { DistribuzioneRisorseData } from '../types.ts';
+import { FundingItem } from '../components/shared/FundingItem.tsx';
+import { Button } from '../components/shared/Button.tsx';
+import { calculateFadTotals } from '../logic/fundEngine.ts';
 
 const formatCurrency = (value?: number, defaultText = TEXTS_UI.notApplicable) => {
   if (value === undefined || value === null || isNaN(value)) return defaultText;
@@ -40,9 +41,30 @@ export const DistribuzioneRisorsePage: React.FC = () => {
 
   const {
     distribuzioneRisorseData,
+    fondoAccessorioDipendenteData,
+    annualData,
+    fondoElevateQualificazioniData,
   } = fundData;
+  
+  const { 
+    simulatoreRisultati, 
+    isEnteDissestato,
+    isEnteStrutturalmenteDeficitario,
+    isEnteRiequilibrioFinanziario,
+  } = annualData;
+  
+  const isEnteInCondizioniSpeciali = !!isEnteDissestato || !!isEnteStrutturalmenteDeficitario || !!isEnteRiequilibrioFinanziario;
+  const incrementoEQconRiduzioneDipendenti = fondoElevateQualificazioniData?.ris_incrementoConRiduzioneFondoDipendenti;
 
-  const totaleDaDistribuire = calculatedFund.dettaglioFondi.dipendente.totale;
+  const fadTotals = useMemo(() => calculateFadTotals(
+    fondoAccessorioDipendenteData, 
+    simulatoreRisultati, 
+    isEnteInCondizioniSpeciali, 
+    incrementoEQconRiduzioneDipendenti
+  ), [fondoAccessorioDipendenteData, simulatoreRisultati, isEnteInCondizioniSpeciali, incrementoEQconRiduzioneDipendenti]);
+
+  const totaleDaDistribuire = fadTotals.totaleRisorseDisponibiliContrattazione_Dipendenti;
+
 
   const handleChange = (field: keyof DistribuzioneRisorseData, value?: number) => {
     dispatch({ type: 'UPDATE_DISTRIBUZIONE_RISORSE_DATA', payload: { [field]: value } });
