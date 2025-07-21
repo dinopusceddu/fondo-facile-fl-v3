@@ -24,10 +24,14 @@ export const RIF_L296_06_C557 = "Art. 1, c. 557, L. 296/2006 (Tetto Spesa Person
 export const RIF_ART67_CCNL2018 = "Art. 67, c.2, CCNL Funzioni Locali 2016-2018";
 export const RIF_ART79_CCNL2022 = "Art. 79, CCNL Funzioni Locali 2019-2021";
 export const RIF_ART80_CCNL2022 = "Art. 80, CCNL Funzioni Locali 2019-2021";
+export const RIF_ART97_CCNL2022 = "Art. 97, CCNL Funzioni Locali 2019-2021";
+export const RIF_ART98_CCNL2022 = "Art. 98, c.1, lett. c), CCNL Funzioni Locali 2019-2021";
+export const RIF_ART100_CCNL2022 = "Art. 100, CCNL Funzioni Locali 2019-2021";
 export const RIF_ART7_C4_U_CCNL2022 = "Art. 7 c. 4 lett. u) CCNL Funzioni Locali 16.11.2022";
 export const RIF_ART45_DLGS36_2023 = "Art. 45 D.Lgs. 36/2023 (ex Art. 113 D.Lgs. 50/2016)";
 export const RIF_ART208_CDS = "Art. 208 Codice della Strada";
 export const RIF_ART8_DL13_2023 = "Art. 8, c.3-4, D.L. 13/2023";
+export const RIF_CCNL_14092000_ART24C1 = "Art. 24, c.1, CCNL 14.09.2000";
 // Riferimenti per Fondo EQ
 export const RIF_ART17_CCNL2022 = "Art. 17 CCNL Funzioni Locali 16.11.2022";
 export const RIF_ART23_C5_CCNL2022 = "Art. 23 c.5 CCNL Funzioni Locali 16.11.2022";
@@ -196,10 +200,15 @@ export const INITIAL_DISTRIBUZIONE_RISORSE_DATA: DistribuzioneRisorseData = {
   u_indennitaEx8QF: undefined,
   p_performanceOrganizzativa: undefined,
   p_performanceIndividuale: undefined,
+  p_maggiorazionePerformanceIndividuale: undefined,
   p_indennitaCondizioniLavoro: undefined,
-  p_indennitaTurnoReperibilita: undefined,
+  p_indennitaTurno: undefined,
+  p_indennitaReperibilita: undefined,
+  p_indennitaLavoroGiornoRiposo: undefined,
   p_compensiSpecificheResponsabilita: undefined,
-  p_indennitaFunzioneServizioEsterno: undefined,
+  p_indennitaFunzione: undefined,
+  p_indennitaServizioEsterno: undefined,
+  p_obiettiviPoliziaLocale: undefined,
   p_incentiviContoTerzi: undefined,
   p_compensiAvvocatura: undefined,
   p_incentiviCondonoFunzioniTecnichePre2018: undefined,
@@ -211,6 +220,10 @@ export const INITIAL_DISTRIBUZIONE_RISORSE_DATA: DistribuzioneRisorseData = {
   p_diffStipendialiAnniPrec: undefined,
   p_diffStipendialiAnnoCorrente: undefined,
   p_pianiWelfare: undefined,
+  criteri_isConsuntivoMode: false,
+  criteri_percPerfIndividuale: 70,
+  criteri_percMaggiorazionePremio: 20,
+  criteri_percDipendentiBonus: 5,
 };
 
 export const INITIAL_ANNUAL_DATA = {
@@ -353,10 +366,15 @@ export const distribuzioneFieldDefinitions: Array<{
   // Utilizzi Parte Variabile
   { key: 'p_performanceOrganizzativa', description: "Premi correlati alla performance organizzativa", riferimento: `${RIF_ART80_CCNL2022}, c.2, lett. a)`, section: 'Utilizzi Parte Variabile (Art. 80 c.2)' },
   { key: 'p_performanceIndividuale', description: "Premi correlati alla performance individuale", riferimento: `${RIF_ART80_CCNL2022}, c.2, lett. b)`, section: 'Utilizzi Parte Variabile (Art. 80 c.2)' },
+  { key: 'p_maggiorazionePerformanceIndividuale', description: "Premi per la maggiorazione della performance individuale", riferimento: `${RIF_ART80_CCNL2022}, c.2, lett. b)`, section: 'Utilizzi Parte Variabile (Art. 80 c.2)' },
   { key: 'p_indennitaCondizioniLavoro', description: "Indennità condizioni di lavoro", riferimento: `${RIF_ART80_CCNL2022}, c.2, lett. c)`, section: 'Utilizzi Parte Variabile (Art. 80 c.2)' },
-  { key: 'p_indennitaTurnoReperibilita', description: "Indennità di turno, reperibilità, etc.", riferimento: `${RIF_ART80_CCNL2022}, c.2, lett. d)`, section: 'Utilizzi Parte Variabile (Art. 80 c.2)' },
+  { key: 'p_indennitaTurno', description: "Indennità di turno", riferimento: `${RIF_ART80_CCNL2022}, c.2, lett. d)`, section: 'Utilizzi Parte Variabile (Art. 80 c.2)' },
+  { key: 'p_indennitaReperibilita', description: "Indennità di reperibilità", riferimento: `${RIF_ART80_CCNL2022}, c.2, lett. d)`, section: 'Utilizzi Parte Variabile (Art. 80 c.2)' },
+  { key: 'p_indennitaLavoroGiornoRiposo', description: "Indennità per lavoro nella giornata di riposo", riferimento: RIF_CCNL_14092000_ART24C1, section: 'Utilizzi Parte Variabile (Art. 80 c.2)' },
   { key: 'p_compensiSpecificheResponsabilita', description: "Compensi per specifiche responsabilità", riferimento: `${RIF_ART80_CCNL2022}, c.2, lett. e)`, section: 'Utilizzi Parte Variabile (Art. 80 c.2)' },
-  { key: 'p_indennitaFunzioneServizioEsterno', description: "Indennità di funzione e di servizio esterno", riferimento: `${RIF_ART80_CCNL2022}, c.2, lett. f)`, section: 'Utilizzi Parte Variabile (Art. 80 c.2)' },
+  { key: 'p_indennitaFunzione', description: "Indennità di funzione", riferimento: RIF_ART97_CCNL2022, section: 'Utilizzi Parte Variabile (Art. 80 c.2)' },
+  { key: 'p_indennitaServizioEsterno', description: "Indennità di servizio esterno", riferimento: RIF_ART100_CCNL2022, section: 'Utilizzi Parte Variabile (Art. 80 c.2)' },
+  { key: 'p_obiettiviPoliziaLocale', description: "Obiettivi di potenziamento dei servizi di Polizia Locale", riferimento: RIF_ART98_CCNL2022, section: 'Utilizzi Parte Variabile (Art. 80 c.2)' },
   { key: 'p_incentiviContoTerzi', description: "Incentivi da entrate conto terzi o utenza (es. ISTAT)", riferimento: `${RIF_ART80_CCNL2022}, c.2, lett. g)`, section: 'Utilizzi Parte Variabile (Art. 80 c.2)' },
   { key: 'p_compensiAvvocatura', description: "Compensi avvocatura interna per sentenze favorevoli", riferimento: `${RIF_ART80_CCNL2022}, c.2, lett. g)`, section: 'Utilizzi Parte Variabile (Art. 80 c.2)' },
   { key: 'p_incentiviCondonoFunzioniTecnichePre2018', description: "Incentivi (condono, funzioni tecniche pre-2018)", riferimento: `${RIF_ART80_CCNL2022}, c.2, lett. g)`, section: 'Utilizzi Parte Variabile (Art. 80 c.2)' },

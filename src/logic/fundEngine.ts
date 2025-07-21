@@ -504,8 +504,18 @@ export const runAllComplianceChecks = (calculatedFund: CalculatedFund, fundData:
              (data.u_incrIndennitaEducatori || 0) +
              (data.u_incrIndennitaScolastico || 0) +
              (data.u_indennitaEx8QF || 0);
+
+      const utilizziParteVariabile = Object.keys(data)
+          .filter(key => key.startsWith('p_'))
+          .reduce((sum, key) => {
+              const value = data[key as keyof DistribuzioneRisorseData];
+              if (typeof value === 'number') {
+                  return sum + value;
+              }
+              return sum;
+          }, 0);
       
-      const totaleAllocato = Object.values(data).reduce((sum, value) => sum + (value || 0), 0);
+      const totaleAllocato = utilizziParteStabile + utilizziParteVariabile;
       const importoRimanente = risorseDaDistribuire - totaleAllocato;
 
       if (utilizziParteStabile > risorseDaDistribuire) {

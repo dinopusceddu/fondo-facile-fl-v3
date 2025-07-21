@@ -83,7 +83,13 @@ export const DistribuzioneRisorsePage: React.FC = () => {
     const data = distribuzioneRisorseData || {};
     return Object.keys(data)
       .filter(key => key.startsWith('p_'))
-      .reduce((sum, key) => sum + (data[key as keyof DistribuzioneRisorseData] || 0), 0);
+      .reduce((sum, key) => {
+        const value = data[key as keyof DistribuzioneRisorseData];
+        if (typeof value === 'number') {
+          return sum + value;
+        }
+        return sum;
+      }, 0);
   }, [distribuzioneRisorseData]);
 
   const totaleAllocato = useMemo(() => {
@@ -150,7 +156,7 @@ export const DistribuzioneRisorsePage: React.FC = () => {
                 key={def.key}
                 id={def.key}
                 description={def.description}
-                value={distribuzioneRisorseData[def.key]}
+                value={distribuzioneRisorseData[def.key] as number | undefined}
                 onChange={handleChange}
                 riferimentoNormativo={def.riferimento}
                 disabled={isAutoCalculated}

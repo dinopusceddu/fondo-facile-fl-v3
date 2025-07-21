@@ -270,10 +270,15 @@ export interface DistribuzioneRisorseData {
   // art 80, comma 2
   p_performanceOrganizzativa?: number;
   p_performanceIndividuale?: number;
+  p_maggiorazionePerformanceIndividuale?: number;
   p_indennitaCondizioniLavoro?: number;
-  p_indennitaTurnoReperibilita?: number;
+  p_indennitaTurno?: number;
+  p_indennitaReperibilita?: number;
+  p_indennitaLavoroGiornoRiposo?: number;
   p_compensiSpecificheResponsabilita?: number;
-  p_indennitaFunzioneServizioEsterno?: number;
+  p_indennitaFunzione?: number;
+  p_indennitaServizioEsterno?: number;
+  p_obiettiviPoliziaLocale?: number;
   p_incentiviContoTerzi?: number;
   p_compensiAvvocatura?: number;
   p_incentiviCondonoFunzioniTecnichePre2018?: number;
@@ -285,6 +290,12 @@ export interface DistribuzioneRisorseData {
   p_diffStipendialiAnniPrec?: number;
   p_diffStipendialiAnnoCorrente?: number;
   p_pianiWelfare?: number;
+  
+  // Criteri di distribuzione
+  criteri_isConsuntivoMode?: boolean;
+  criteri_percPerfIndividuale?: number;
+  criteri_percMaggiorazionePremio?: number;
+  criteri_percDipendentiBonus?: number;
 }
 
 export interface FundData {
@@ -342,7 +353,6 @@ export interface CalculatedFund {
     dirigenza: FundDetailTotals;
   };
 }
-
 
 export interface ComplianceCheck {
   id: string;

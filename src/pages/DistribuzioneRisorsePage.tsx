@@ -1,11 +1,13 @@
 // pages/DistribuzioneRisorsePage.tsx
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { useAppContext } from '../contexts/AppContext.tsx';
 import { Card } from '../components/shared/Card.tsx';
 import { TEXTS_UI, distribuzioneFieldDefinitions } from '../constants.ts';
 import { DistribuzioneRisorseData } from '../types.ts';
 import { FundingItem } from '../components/shared/FundingItem.tsx';
 import { Button } from '../components/shared/Button.tsx';
+import { Input } from '../components/shared/Input.tsx';
+import { Checkbox } from '../components/shared/Checkbox.tsx';
 import { calculateFadTotals } from '../logic/fundEngine.ts';
 
 const formatCurrency = (value?: number, defaultText = TEXTS_UI.notApplicable) => {
@@ -13,9 +15,20 @@ const formatCurrency = (value?: number, defaultText = TEXTS_UI.notApplicable) =>
   return `€ ${value.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 };
 
+const DisplayField: React.FC<{ label: string; value: string | number; info?: string }> = ({ label, value, info }) => (
+  <div className="mb-4">
+    <label className="block text-base font-medium text-[#1b0e0e] pb-2">{label}</label>
+    <div className="flex w-full min-w-0 flex-1 items-center rounded-lg text-[#1b0e0e] border border-[#d1c0c1] bg-[#fcf8f8] h-12 md:h-14 p-3 md:p-4 text-base font-semibold">
+      {value}
+    </div>
+    {info && <p className="mt-1 text-xs text-[#5f5252]">{info}</p>}
+  </div>
+);
+
 export const DistribuzioneRisorsePage: React.FC = () => {
   const { state, dispatch, saveState } = useAppContext();
   const { fundData, calculatedFund } = state;
+  const { dettagli: employees } = state.personaleServizio;
 
   if (!calculatedFund || !calculatedFund.dettaglioFondi) {
     return (
@@ -66,8 +79,57 @@ export const DistribuzioneRisorsePage: React.FC = () => {
   const totaleDaDistribuire = fadTotals.totaleRisorseDisponibiliContrattazione_Dipendenti;
 
 
-  const handleChange = (field: keyof DistribuzioneRisorseData, value?: number) => {
+  const handleChange = (field: keyof DistribuzioneRisorseData, value?: number | boolean) => {
     dispatch({ type: 'UPDATE_DISTRIBUZIONE_RISORSE_DATA', payload: { [field]: value } });
+  };
+  
+  const { p_performanceIndividuale, p_performanceOrganizzativa } = distribuzioneRisorseData;
+
+  useEffect(() => {
+    const individuale = p_performanceIndividuale || 0;
+    const organizzativa = p_performanceOrganizzativa || 0;
+    const total = individuale + organizzativa;
+
+    if (total > 0) {
+        const newPerc = (individuale / total) * 100;
+        if (distribuzioneRisorseData.criteri_percPerfIndividuale?.toFixed(1) !== newPerc.toFixed(1)) {
+             dispatch({
+                type: 'UPDATE_DISTRIBUZIONE_RISORSE_DATA',
+                payload: { criteri_percPerfIndividuale: parseFloat(newPerc.toFixed(1)) }
+            });
+        }
+    } else if (distribuzioneRisorseData.criteri_percPerfIndividuale !== 70) { // Reset to default if total is zero
+        dispatch({
+            type: 'UPDATE_DISTRIBUZIONE_RISORSE_DATA',
+            payload: { criteri_percPerfIndividuale: 70 }
+        });
+    }
+  }, [p_performanceIndividuale, p_performanceOrganizzativa, dispatch, distribuzioneRisorseData.criteri_percPerfIndividuale]);
+
+  const handlePerfPercChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newPercStr = e.target.value;
+    const newPerc = newPercStr === '' ? undefined : parseFloat(newPercStr);
+    
+    dispatch({ type: 'UPDATE_DISTRIBUZIONE_RISORSE_DATA', payload: { criteri_percPerfIndividuale: newPerc }});
+
+    if (newPerc !== undefined && newPerc >= 0 && newPerc <= 100) {
+        const currentIndividuale = p_performanceIndividuale || 0;
+        const currentOrganizzativa = p_performanceOrganizzativa || 0;
+        const totalPerformanceBudget = currentIndividuale + currentOrganizzativa;
+
+        if (totalPerformanceBudget > 0) {
+            const newIndividuale = totalPerformanceBudget * (newPerc / 100);
+            const newOrganizzativa = totalPerformanceBudget - newIndividuale;
+            
+            dispatch({ 
+                type: 'UPDATE_DISTRIBUZIONE_RISORSE_DATA', 
+                payload: { 
+                    p_performanceIndividuale: parseFloat(newIndividuale.toFixed(2)),
+                    p_performanceOrganizzativa: parseFloat(newOrganizzativa.toFixed(2))
+                } 
+            });
+        }
+    }
   };
   
   const utilizziParteStabile = useMemo(() => {
@@ -83,7 +145,13 @@ export const DistribuzioneRisorsePage: React.FC = () => {
     const data = distribuzioneRisorseData || {};
     return Object.keys(data)
       .filter(key => key.startsWith('p_'))
-      .reduce((sum, key) => sum + (data[key as keyof DistribuzioneRisorseData] || 0), 0);
+      .reduce((sum, key) => {
+          const value = data[key as keyof DistribuzioneRisorseData];
+          if (typeof value === 'number') {
+              return sum + value;
+          }
+          return sum;
+      }, 0);
   }, [distribuzioneRisorseData]);
 
   const totaleAllocato = useMemo(() => {
@@ -103,11 +171,17 @@ export const DistribuzioneRisorsePage: React.FC = () => {
     }, {} as Record<string, typeof distribuzioneFieldDefinitions>)
   , []);
 
+  const numeroDipendenti = employees?.length || 0;
+  const percDipendentiBonus = distribuzioneRisorseData.criteri_percDipendentiBonus || 0;
+  const numDipendentiBonus = Math.ceil(numeroDipendenti * (percDipendentiBonus / 100));
+  const maggiorazioneIndividualeTotale = distribuzioneRisorseData.p_maggiorazionePerformanceIndividuale || 0;
+  const maggiorazioneProCapite = numDipendentiBonus > 0 ? maggiorazioneIndividualeTotale / numDipendentiBonus : 0;
+
   return (
     <div className="space-y-8 pb-24">
       <h2 className="text-[#1b0e0e] tracking-light text-2xl sm:text-[30px] font-bold leading-tight">Distribuzione delle Risorse del Fondo</h2>
       
-      <Card title="Riepilogo Risorse e Allocazione" className="sticky top-[63px] z-30 bg-white/90 backdrop-blur-sm border-b-2">
+      <Card title="Riepilogo Risorse e Allocazione" className="mb-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="p-4 bg-[#fcf8f8] rounded-lg text-center">
             <h4 className="text-sm font-medium text-[#5f5252]">Totale da Distribuire</h4>
@@ -140,6 +214,71 @@ export const DistribuzioneRisorsePage: React.FC = () => {
           </p>
         )}
       </Card>
+
+      <Card title="Criteri di distribuzione delle risorse" className="mb-6" isCollapsible defaultCollapsed={false}>
+        <div className="border-b border-[#f3e7e8] pb-4 mb-4">
+          <Checkbox
+            id="isConsuntivoMode"
+            label="Entrare nella modalità distribuzione delle risorse a consuntivo?"
+            checked={!!distribuzioneRisorseData.criteri_isConsuntivoMode}
+            onChange={(e) => handleChange('criteri_isConsuntivoMode', e.target.checked)}
+          />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-0">
+            <Input 
+                label="Percentuale performance individuale (%)"
+                type="number"
+                min="0"
+                max="100"
+                step="0.1"
+                value={distribuzioneRisorseData.criteri_percPerfIndividuale ?? ''}
+                onChange={handlePerfPercChange}
+                inputInfo="Modifica questa percentuale per ripartire automaticamente gli importi totali di performance individuale e organizzativa inseriti sotto."
+            />
+            <DisplayField 
+                label="Percentuale performance organizzativa (%)"
+                value={`${(100 - (distribuzioneRisorseData.criteri_percPerfIndividuale || 0)).toFixed(1)}%`}
+                info="Calcolato come 100% - % individuale"
+            />
+            <Input 
+                label="% maggiorazione premio medio pro capite"
+                type="number"
+                min="20"
+                max="100"
+                step="1"
+                value={distribuzioneRisorseData.criteri_percMaggiorazionePremio ?? ''}
+                onChange={(e) => handleChange('criteri_percMaggiorazionePremio', e.target.value === '' ? undefined : parseFloat(e.target.value))}
+                inputInfo="Rif. Art. 81 c. 2 CCNL 2022. Min 20%, Max 100%."
+            />
+            <DisplayField
+                label="Numero dipendenti totali"
+                value={numeroDipendenti}
+                info="Conteggio da 'Personale in servizio'"
+            />
+            <Input
+                label="% dipendenti con bonus individuale"
+                type="number"
+                min="1"
+                max="50"
+                step="1"
+                value={distribuzioneRisorseData.criteri_percDipendentiBonus ?? ''}
+                onChange={(e) => handleChange('criteri_percDipendentiBonus', e.target.value === '' ? undefined : parseFloat(e.target.value))}
+                inputInfo="Percentuale di personale a cui attribuire la maggiorazione del premio. Min 1%, Max 50%."
+            />
+            <DisplayField
+                label="Numero dipendenti con bonus"
+                value={numDipendentiBonus}
+                info="Calcolato come (% dipendenti bonus * N. dipendenti totali), arrotondato per eccesso."
+            />
+        </div>
+        <div className="mt-4">
+            <DisplayField
+                label="Maggiorazione pro-capite premio individuale"
+                value={formatCurrency(maggiorazioneProCapite)}
+                info="Calcolato come (Importo 'Premi per la maggiorazione') / (Numero dipendenti con bonus)."
+            />
+        </div>
+      </Card>
       
       {Object.entries(sections).map(([sectionName, fields]) => (
         <Card key={sectionName} title={sectionName} isCollapsible defaultCollapsed={false}>
@@ -150,8 +289,8 @@ export const DistribuzioneRisorsePage: React.FC = () => {
                 key={def.key}
                 id={def.key}
                 description={def.description}
-                value={distribuzioneRisorseData[def.key]}
-                onChange={handleChange}
+                value={distribuzioneRisorseData[def.key] as number | undefined}
+                onChange={(field, value) => handleChange(field, value)}
                 riferimentoNormativo={def.riferimento}
                 disabled={isAutoCalculated}
                 inputInfo={isAutoCalculated ? "Valore calcolato automaticamente dalla pagina Personale in Servizio" : undefined}
