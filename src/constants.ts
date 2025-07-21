@@ -221,7 +221,7 @@ export const INITIAL_DISTRIBUZIONE_RISORSE_DATA: DistribuzioneRisorseData = {
   p_diffStipendialiAnnoCorrente: undefined,
   p_pianiWelfare: undefined,
   criteri_isConsuntivoMode: false,
-  criteri_percPerfIndividuale: 70,
+  criteri_percPerfIndividuale: 50,
   criteri_percMaggiorazionePremio: 20,
   criteri_percDipendentiBonus: 5,
 };

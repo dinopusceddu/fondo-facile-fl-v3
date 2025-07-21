@@ -12,7 +12,8 @@ import {
     FondoElevateQualificazioniData,
     FondoSegretarioComunaleData,
     FondoDirigenzaData,
-    DistribuzioneRisorseData
+    DistribuzioneRisorseData,
+    RisorsaVariabileDetail
 } from '../types.ts';
 
 import { fadFieldDefinitions } from '../pages/FondoAccessorioDipendentePageHelpers.ts';
@@ -499,20 +500,18 @@ export const runAllComplianceChecks = (calculatedFund: CalculatedFund, fundData:
   const risorseDaDistribuire = calculatedFund.dettaglioFondi.dipendente.totale;
   if (risorseDaDistribuire > 0) {
       const data = distribuzioneRisorseData || {};
-      const utilizziParteStabile = (data.u_diffProgressioniStoriche || 0) +
-             (data.u_indennitaComparto || 0) +
-             (data.u_incrIndennitaEducatori || 0) +
-             (data.u_incrIndennitaScolastico || 0) +
-             (data.u_indennitaEx8QF || 0);
+      const utilizziParteStabile = 
+            (data.u_diffProgressioniStoriche || 0) +
+            (data.u_indennitaComparto || 0) +
+            (data.u_incrIndennitaEducatori?.stanziate || 0) +
+            (data.u_incrIndennitaScolastico?.stanziate || 0) +
+            (data.u_indennitaEx8QF?.stanziate || 0);
 
       const utilizziParteVariabile = Object.keys(data)
           .filter(key => key.startsWith('p_'))
           .reduce((sum, key) => {
-              const value = data[key as keyof DistribuzioneRisorseData];
-              if (typeof value === 'number') {
-                  return sum + value;
-              }
-              return sum;
+              const value = data[key as keyof DistribuzioneRisorseData] as RisorsaVariabileDetail | undefined;
+              return sum + (value?.stanziate || 0);
           }, 0);
       
       const totaleAllocato = utilizziParteStabile + utilizziParteVariabile;

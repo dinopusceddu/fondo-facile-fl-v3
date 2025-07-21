@@ -1,9 +1,9 @@
 // pages/DistribuzioneRisorsePage.tsx
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
 import { useAppContext } from '../contexts/AppContext.tsx';
 import { Card } from '../components/shared/Card.tsx';
 import { TEXTS_UI, distribuzioneFieldDefinitions } from '../constants.ts';
-import { DistribuzioneRisorseData } from '../types.ts';
+import { DistribuzioneRisorseData, RisorsaVariabileDetail } from '../types.ts';
 import { FundingItem } from '../components/shared/FundingItem.tsx';
 import { Button } from '../components/shared/Button.tsx';
 import { Input } from '../components/shared/Input.tsx';
@@ -16,9 +16,9 @@ const formatCurrency = (value?: number, defaultText = TEXTS_UI.notApplicable) =>
 };
 
 const DisplayField: React.FC<{ label: string; value: string | number; info?: string }> = ({ label, value, info }) => (
-  <div className="mb-4">
-    <label className="block text-base font-medium text-[#1b0e0e] pb-2">{label}</label>
-    <div className="flex w-full min-w-0 flex-1 items-center rounded-lg text-[#1b0e0e] border border-[#d1c0c1] bg-[#fcf8f8] h-12 md:h-14 p-3 md:p-4 text-base font-semibold">
+  <div className="mb-0">
+    <label className="block text-xs font-medium text-[#1b0e0e] pb-2">{label}</label>
+    <div className="flex w-full min-w-0 flex-1 items-center rounded-lg text-[#1b0e0e] border border-transparent bg-[#fcf8f8] h-10 p-2 text-sm font-semibold">
       {value}
     </div>
     {info && <p className="mt-1 text-xs text-[#5f5252]">{info}</p>}
@@ -29,6 +29,7 @@ export const DistribuzioneRisorsePage: React.FC = () => {
   const { state, dispatch, saveState } = useAppContext();
   const { fundData, calculatedFund } = state;
   const { dettagli: employees } = state.personaleServizio;
+  const [isMaggiorazioneUserEdited, setIsMaggiorazioneUserEdited] = useState(false);
 
   if (!calculatedFund || !calculatedFund.dettaglioFondi) {
     return (
@@ -83,28 +84,23 @@ export const DistribuzioneRisorsePage: React.FC = () => {
     dispatch({ type: 'UPDATE_DISTRIBUZIONE_RISORSE_DATA', payload: { [field]: value } });
   };
   
-  const { p_performanceIndividuale, p_performanceOrganizzativa } = distribuzioneRisorseData;
-
-  useEffect(() => {
-    const individuale = p_performanceIndividuale || 0;
-    const organizzativa = p_performanceOrganizzativa || 0;
-    const total = individuale + organizzativa;
-
-    if (total > 0) {
-        const newPerc = (individuale / total) * 100;
-        if (distribuzioneRisorseData.criteri_percPerfIndividuale?.toFixed(1) !== newPerc.toFixed(1)) {
-             dispatch({
-                type: 'UPDATE_DISTRIBUZIONE_RISORSE_DATA',
-                payload: { criteri_percPerfIndividuale: parseFloat(newPerc.toFixed(1)) }
-            });
-        }
-    } else if (distribuzioneRisorseData.criteri_percPerfIndividuale !== 70) { // Reset to default if total is zero
-        dispatch({
-            type: 'UPDATE_DISTRIBUZIONE_RISORSE_DATA',
-            payload: { criteri_percPerfIndividuale: 70 }
-        });
+  const handleVariableChange = (
+    field: keyof DistribuzioneRisorseData, 
+    subField: keyof RisorsaVariabileDetail, 
+    value?: number
+  ) => {
+    if (field === 'p_maggiorazionePerformanceIndividuale' && subField === 'stanziate') {
+      setIsMaggiorazioneUserEdited(true);
     }
-  }, [p_performanceIndividuale, p_performanceOrganizzativa, dispatch, distribuzioneRisorseData.criteri_percPerfIndividuale]);
+    const currentItem = distribuzioneRisorseData[field] as RisorsaVariabileDetail | undefined;
+    const newItem = {
+      ...currentItem,
+      [subField]: value
+    };
+    dispatch({ type: 'UPDATE_DISTRIBUZIONE_RISORSE_DATA', payload: { [field]: newItem } });
+  };
+
+  const { p_performanceIndividuale, p_performanceOrganizzativa } = distribuzioneRisorseData;
 
   const handlePerfPercChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newPercStr = e.target.value;
@@ -113,9 +109,7 @@ export const DistribuzioneRisorsePage: React.FC = () => {
     dispatch({ type: 'UPDATE_DISTRIBUZIONE_RISORSE_DATA', payload: { criteri_percPerfIndividuale: newPerc }});
 
     if (newPerc !== undefined && newPerc >= 0 && newPerc <= 100) {
-        const currentIndividuale = p_performanceIndividuale || 0;
-        const currentOrganizzativa = p_performanceOrganizzativa || 0;
-        const totalPerformanceBudget = currentIndividuale + currentOrganizzativa;
+        const totalPerformanceBudget = (p_performanceIndividuale?.stanziate || 0) + (p_performanceOrganizzativa?.stanziate || 0);
 
         if (totalPerformanceBudget > 0) {
             const newIndividuale = totalPerformanceBudget * (newPerc / 100);
@@ -124,8 +118,8 @@ export const DistribuzioneRisorsePage: React.FC = () => {
             dispatch({ 
                 type: 'UPDATE_DISTRIBUZIONE_RISORSE_DATA', 
                 payload: { 
-                    p_performanceIndividuale: parseFloat(newIndividuale.toFixed(2)),
-                    p_performanceOrganizzativa: parseFloat(newOrganizzativa.toFixed(2))
+                    p_performanceIndividuale: { ...p_performanceIndividuale, stanziate: parseFloat(newIndividuale.toFixed(2)) },
+                    p_performanceOrganizzativa: { ...p_performanceOrganizzativa, stanziate: parseFloat(newOrganizzativa.toFixed(2)) }
                 } 
             });
         }
@@ -136,9 +130,9 @@ export const DistribuzioneRisorsePage: React.FC = () => {
     const data = distribuzioneRisorseData || {};
     return (data.u_diffProgressioniStoriche || 0) +
            (data.u_indennitaComparto || 0) +
-           (data.u_incrIndennitaEducatori || 0) +
-           (data.u_incrIndennitaScolastico || 0) +
-           (data.u_indennitaEx8QF || 0);
+           (data.u_incrIndennitaEducatori?.stanziate || 0) +
+           (data.u_incrIndennitaScolastico?.stanziate || 0) +
+           (data.u_indennitaEx8QF?.stanziate || 0);
   }, [distribuzioneRisorseData]);
   
   const utilizziParteVariabile = useMemo(() => {
@@ -146,11 +140,8 @@ export const DistribuzioneRisorsePage: React.FC = () => {
     return Object.keys(data)
       .filter(key => key.startsWith('p_'))
       .reduce((sum, key) => {
-          const value = data[key as keyof DistribuzioneRisorseData];
-          if (typeof value === 'number') {
-              return sum + value;
-          }
-          return sum;
+          const value = data[key as keyof DistribuzioneRisorseData] as RisorsaVariabileDetail | undefined;
+          return sum + (value?.stanziate || 0);
       }, 0);
   }, [distribuzioneRisorseData]);
 
@@ -174,8 +165,38 @@ export const DistribuzioneRisorsePage: React.FC = () => {
   const numeroDipendenti = employees?.length || 0;
   const percDipendentiBonus = distribuzioneRisorseData.criteri_percDipendentiBonus || 0;
   const numDipendentiBonus = Math.ceil(numeroDipendenti * (percDipendentiBonus / 100));
-  const maggiorazioneIndividualeTotale = distribuzioneRisorseData.p_maggiorazionePerformanceIndividuale || 0;
-  const maggiorazioneProCapite = numDipendentiBonus > 0 ? maggiorazioneIndividualeTotale / numDipendentiBonus : 0;
+
+  const maggiorazioneProCapite = useMemo(() => {
+    const percInd = distribuzioneRisorseData.criteri_percPerfIndividuale || 0;
+    const percMagg = distribuzioneRisorseData.criteri_percMaggiorazionePremio || 0;
+
+    if (numeroDipendenti === 0) return 0;
+
+    const budgetIndividualeTeorico = importoDisponibileContrattazione * (percInd / 100);
+    const premioMedioTeorico = budgetIndividualeTeorico / numeroDipendenti;
+    return premioMedioTeorico * (percMagg / 100);
+
+  }, [importoDisponibileContrattazione, distribuzioneRisorseData.criteri_percPerfIndividuale, distribuzioneRisorseData.criteri_percMaggiorazionePremio, numeroDipendenti]);
+  
+  useEffect(() => {
+    const calculatedValue = maggiorazioneProCapite * numDipendentiBonus;
+    if (isFinite(calculatedValue)) {
+        const roundedValue = Math.round((calculatedValue + Number.EPSILON) * 100) / 100;
+        
+        if (!isMaggiorazioneUserEdited) {
+            const currentValue = distribuzioneRisorseData.p_maggiorazionePerformanceIndividuale?.stanziate;
+            if (currentValue !== roundedValue) {
+                const currentItem = distribuzioneRisorseData.p_maggiorazionePerformanceIndividuale as RisorsaVariabileDetail | undefined;
+                const newItem = {
+                    ...currentItem,
+                    stanziate: roundedValue
+                };
+                dispatch({ type: 'UPDATE_DISTRIBUZIONE_RISORSE_DATA', payload: { p_maggiorazionePerformanceIndividuale: newItem } });
+            }
+        }
+    }
+  }, [maggiorazioneProCapite, numDipendentiBonus, isMaggiorazioneUserEdited, dispatch, distribuzioneRisorseData.p_maggiorazionePerformanceIndividuale]);
+
 
   return (
     <div className="space-y-8 pb-24">
@@ -275,28 +296,131 @@ export const DistribuzioneRisorsePage: React.FC = () => {
             <DisplayField
                 label="Maggiorazione pro-capite premio individuale"
                 value={formatCurrency(maggiorazioneProCapite)}
-                info="Calcolato come (Importo 'Premi per la maggiorazione') / (Numero dipendenti con bonus)."
+                info="Calcolato come ((Disponibile contrattazione * % Perf. Individuale) / N. Dipendenti) * % Maggiorazione."
             />
         </div>
       </Card>
       
       {Object.entries(sections).map(([sectionName, fields]) => (
         <Card key={sectionName} title={sectionName} isCollapsible defaultCollapsed={false}>
-          {fields.map(def => {
-            const isAutoCalculated = def.key === 'u_diffProgressioniStoriche' || def.key === 'u_indennitaComparto';
-            return (
-              <FundingItem<DistribuzioneRisorseData>
-                key={def.key}
-                id={def.key}
-                description={def.description}
-                value={distribuzioneRisorseData[def.key] as number | undefined}
-                onChange={(field, value) => handleChange(field, value)}
-                riferimentoNormativo={def.riferimento}
-                disabled={isAutoCalculated}
-                inputInfo={isAutoCalculated ? "Valore calcolato automaticamente dalla pagina Personale in Servizio" : undefined}
-              />
-            );
-          })}
+            {fields.map(def => {
+                 const specialStableKeys: (keyof DistribuzioneRisorseData)[] = ['u_incrIndennitaEducatori', 'u_incrIndennitaScolastico', 'u_indennitaEx8QF'];
+                 if (sectionName === 'Utilizzi Parte Stabile (Art. 80 c.1)') {
+                    const isAutoCalculated = def.key === 'u_diffProgressioniStoriche' || def.key === 'u_indennitaComparto';
+                    const isSpecialStableField = specialStableKeys.includes(def.key);
+
+                    if (isSpecialStableField) {
+                      const value = distribuzioneRisorseData[def.key] as RisorsaVariabileDetail | undefined;
+                      return (
+                        <div key={def.key} className="py-4 border-b border-[#f3e7e8] last:border-b-0">
+                            <div className="mb-3">
+                                <p className="block text-sm text-[#1b0e0e] font-medium">{def.description}</p>
+                                <p className="text-xs text-[#5f5252] mt-0.5">{def.riferimento}</p>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-3">
+                              <Input
+                                label="Risorse stanziate (€)"
+                                type="number"
+                                id={`${def.key}-stanziate`}
+                                value={value?.stanziate ?? ''}
+                                onChange={(e) => handleVariableChange(def.key, 'stanziate', e.target.value === '' ? undefined : parseFloat(e.target.value))}
+                                step="0.01"
+                                containerClassName="mb-0"
+                                labelClassName="text-xs"
+                                inputClassName="h-10 text-sm"
+                              />
+                              <Input
+                                label="Risparmi (€)"
+                                type="number"
+                                id={`${def.key}-risparmi`}
+                                value={value?.risparmi ?? ''}
+                                onChange={(e) => handleVariableChange(def.key, 'risparmi', e.target.value === '' ? undefined : parseFloat(e.target.value))}
+                                step="0.01"
+                                containerClassName="mb-0"
+                                labelClassName="text-xs"
+                                inputClassName="h-10 text-sm"
+                                disabled={!distribuzioneRisorseData.criteri_isConsuntivoMode}
+                                inputInfo={!distribuzioneRisorseData.criteri_isConsuntivoMode ? "Abilitato in modalità consuntivo" : undefined}
+                              />
+                            </div>
+                        </div>
+                      );
+                    }
+
+                    return (
+                        <FundingItem<DistribuzioneRisorseData>
+                            key={def.key}
+                            id={def.key}
+                            description={def.description}
+                            value={distribuzioneRisorseData[def.key] as number | undefined}
+                            onChange={(field, value) => handleChange(field, value as number)}
+                            riferimentoNormativo={def.riferimento}
+                            disabled={isAutoCalculated}
+                            inputInfo={isAutoCalculated ? "Valore calcolato automaticamente dalla pagina Personale in Servizio" : undefined}
+                        />
+                    );
+                 }
+                 
+                 const value = distribuzioneRisorseData[def.key] as RisorsaVariabileDetail | undefined;
+                 const percentage = importoDisponibileContrattazione > 0 ? ((value?.stanziate || 0) / importoDisponibileContrattazione) * 100 : 0;
+                 let stanziateInputInfo: string | undefined = undefined;
+                 if (def.key === 'p_maggiorazionePerformanceIndividuale') {
+                     stanziateInputInfo = "Calcolato da Criteri, ma modificabile.";
+                 }
+
+                 return (
+                    <div key={def.key} className="py-4 border-b border-[#f3e7e8] last:border-b-0">
+                        <div className="mb-3">
+                            <p className="block text-sm text-[#1b0e0e] font-medium">{def.description}</p>
+                            <p className="text-xs text-[#5f5252] mt-0.5">{def.riferimento}</p>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-3">
+                          <Input
+                            label="Risorse stanziate (€)"
+                            type="number"
+                            id={`${def.key}-stanziate`}
+                            value={value?.stanziate ?? ''}
+                            onChange={(e) => handleVariableChange(def.key, 'stanziate', e.target.value === '' ? undefined : parseFloat(e.target.value))}
+                            step="0.01"
+                            containerClassName="mb-0"
+                            labelClassName="text-xs"
+                            inputClassName="h-10 text-sm"
+                            inputInfo={stanziateInputInfo}
+                          />
+                          <DisplayField 
+                            label="% sul variabile"
+                            value={`${percentage.toFixed(2)}%`}
+                          />
+                          <Input
+                            label="Risparmi (€)"
+                            type="number"
+                            id={`${def.key}-risparmi`}
+                            value={value?.risparmi ?? ''}
+                            onChange={(e) => handleVariableChange(def.key, 'risparmi', e.target.value === '' ? undefined : parseFloat(e.target.value))}
+                            step="0.01"
+                            containerClassName="mb-0"
+                            labelClassName="text-xs"
+                            inputClassName="h-10 text-sm"
+                            disabled={!distribuzioneRisorseData.criteri_isConsuntivoMode}
+                            inputInfo={!distribuzioneRisorseData.criteri_isConsuntivoMode ? "Abilitato in modalità consuntivo" : undefined}
+                          />
+                          <Input
+                            label="Risorse a bilancio (€)"
+                            type="number"
+                            id={`${def.key}-aBilancio`}
+                            value={value?.aBilancio ?? ''}
+                            onChange={(e) => handleVariableChange(def.key, 'aBilancio', e.target.value === '' ? undefined : parseFloat(e.target.value))}
+                            step="0.01"
+                            containerClassName="mb-0"
+                            labelClassName="text-xs"
+                            inputClassName="h-10 text-sm"
+                            disabled={!distribuzioneRisorseData.criteri_isConsuntivoMode}
+                            inputInfo={!distribuzioneRisorseData.criteri_isConsuntivoMode ? "Abilitato in modalità consuntivo" : undefined}
+                          />
+                        </div>
+                    </div>
+                 );
+            })}
         </Card>
       ))}
 
