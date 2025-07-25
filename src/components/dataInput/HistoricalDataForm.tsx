@@ -113,3 +113,7 @@ export const HistoricalDataForm: React.FC = () => {
           onChange={handleChange}
           placeholder="Es. 350000.00"
           />
+      </div>
+    </Card>
+  );
+};
