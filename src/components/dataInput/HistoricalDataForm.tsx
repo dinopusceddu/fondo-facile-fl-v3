@@ -112,4 +112,4 @@ export const HistoricalDataForm: React.FC = () => {
           value={historicalData.totaleFondoAnnoPrecedente ?? ''}
           onChange={handleChange}
           placeholder="Es. 350000.00"
-          
+          />
