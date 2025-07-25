@@ -500,7 +500,7 @@ export const generateFADXLS = (
 
                 html += `
                     <tr>
-                        <td class="text">${typeof def.description === 'string' ? def.description : def.key}</td>
+                        <td class="text">${typeof def.description === 'string' ? def.description : String(def.key)}</td>
                         <td class="text">${def.riferimento}</td>
                         ${formatCellCurrency(effectiveValue, def.isSubtractor)}
                         <td class="text" style="text-align: center;">${def.isRelevantToArt23Limit ? 'Sì' : 'No'}</td>

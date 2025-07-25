@@ -135,7 +135,7 @@ export const CompliancePage: React.FC = () => {
                 ))}
             </div>
         )}
-        {(criticalIssues.length === 0 && warnings.length === 0 && infos.length === 0 && complianceChecks.length > 0) && (
+        {(criticalIssues.length === 0 && warnings.length > 0 && infos.length === 0 && complianceChecks.length > 0) && (
             <p className="text-[#1b0e0e]">Tutti i controlli eseguiti non hanno rilevato criticità o avvisi particolari.</p>
         )}
          {complianceChecks.length === 0 && (

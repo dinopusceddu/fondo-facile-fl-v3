@@ -155,7 +155,7 @@ export const PersonaleServizioPage: React.FC = () => {
   };
   
   const totalAbsorbedProgression = useMemo(() => {
-    return (employeeList || []).reduce((sum, employee) => {
+    const total = (employeeList || []).reduce((sum, employee) => {
       if (employee.areaQualifica && employee.livelloPeoStoriche) {
         const areaValues = PROGRESSION_ECONOMIC_VALUES[employee.areaQualifica];
         const progressionValue = areaValues?.[employee.livelloPeoStoriche];
@@ -167,6 +167,7 @@ export const PersonaleServizioPage: React.FC = () => {
       }
       return sum;
     }, 0);
+    return Math.round((total + Number.EPSILON) * 100) / 100;
   }, [employeeList, annoRiferimento]);
 
   const totalAbsorbedIndennitaComparto = useMemo(() => {

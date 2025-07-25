@@ -103,7 +103,7 @@ export const FundDetailsPage: React.FC = () => {
         <p className="text-sm text-[#5f5252] mb-4">Questo è un riepilogo dei valori inseriti per il Fondo del Personale Dipendente, non include i totali calcolati.</p>
         {fadFieldDefinitions.filter(def => def.section === 'stabili').map(def => (
             <FundingItem<FondoAccessorioDipendenteData>
-                key={def.key}
+                key={String(def.key)} 
                 id={def.key} 
                 description={def.description}
                 value={fadData[def.key]} 

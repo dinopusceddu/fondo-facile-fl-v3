@@ -242,7 +242,7 @@ export const FondoAccessorioDipendentePage: React.FC = () => {
 
             return (
                 <FundingItem<FondoAccessorioDipendenteData>
-                    key={def.key}
+                    key={String(def.key)}
                     id={def.key} 
                     description={currentDescription} 
                     value={data[def.key]} 

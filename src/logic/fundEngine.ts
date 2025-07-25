@@ -14,9 +14,9 @@ import {
     FondoDirigenzaData,
     DistribuzioneRisorseData,
     RisorsaVariabileDetail
-} from '../types.ts';
+} from '../types';
 
-import { fadFieldDefinitions } from '../pages/FondoAccessorioDipendentePageHelpers.ts';
+import { fadFieldDefinitions } from '../pages/FondoAccessorioDipendentePageHelpers';
 
 import {
   RIF_ART23_DLGS75_2017,
@@ -31,7 +31,7 @@ import {
   LIMITE_INCREMENTO_PNRR_DL13_2023,
   RIF_ART45_DLGS36_2023,
   RIF_ART208_CDS,
-} from '../constants.ts';
+} from '../constants';
 
 // --- FROM hooks/useSimulatoreCalculations.ts ---
 
@@ -499,7 +499,7 @@ export const runAllComplianceChecks = (calculatedFund: CalculatedFund, fundData:
   // 3. Controlli per la Distribuzione Risorse
   const risorseDaDistribuire = calculatedFund.dettaglioFondi.dipendente.totale;
   if (risorseDaDistribuire > 0) {
-      const data = distribuzioneRisorseData || {};
+      const data = distribuzioneRisorseData || ({} as DistribuzioneRisorseData);
       const utilizziParteStabile = 
             (data.u_diffProgressioniStoriche || 0) +
             (data.u_indennitaComparto || 0) +

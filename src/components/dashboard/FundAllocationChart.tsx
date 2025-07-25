@@ -16,7 +16,7 @@ export const FundAllocationChart: React.FC = () => {
 
   if (!calculatedFund || (calculatedFund.totaleComponenteStabile === 0 && calculatedFund.totaleComponenteVariabile === 0)) {
     return (
-      <Card title="Ripartizione del Fondo">
+      <Card title="Fondo del salario accessorio">
         <div className="flex items-center justify-center h-64 text-[#5f5252]">
           <p>{TEXTS_UI.noDataAvailable} per il grafico.</p>
         </div>
@@ -48,7 +48,7 @@ export const FundAllocationChart: React.FC = () => {
 
 
   return (
-    <Card title="Ripartizione del Fondo">
+    <Card title="Fondo del salario accessorio">
       <div style={{ width: '100%', height: 300 }}>
         <ResponsiveContainer>
           <PieChart>

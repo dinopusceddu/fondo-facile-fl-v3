@@ -1,12 +1,12 @@
 // pages/FondoAccessorioDipendentePage.tsx
 import React, { useEffect, useState } from 'react'; 
-import { useAppContext } from '../contexts/AppContext.tsx';
-import { FondoAccessorioDipendenteData } from '../types.ts';
-import { Card } from '../components/shared/Card.tsx';
-import { TEXTS_UI, RIF_INCREMENTO_DECRETO_PA, RIF_ART23_DLGS75_2017, RIF_ART8_DL13_2023, RIF_ART7_C4_U_CCNL2022 } from '../constants.ts'; 
-import { fadFieldDefinitions } from './FondoAccessorioDipendentePageHelpers.ts';
-import { calculateFadTotals } from '../logic/fundEngine.ts';
-import { FundingItem } from '../components/shared/FundingItem.tsx';
+import { useAppContext } from '../contexts/AppContext';
+import { FondoAccessorioDipendenteData } from '../types';
+import { Card } from '../components/shared/Card';
+import { TEXTS_UI, RIF_INCREMENTO_DECRETO_PA, RIF_ART23_DLGS75_2017, RIF_ART8_DL13_2023, RIF_ART7_C4_U_CCNL2022 } from '../constants'; 
+import { fadFieldDefinitions } from './FondoAccessorioDipendentePageHelpers';
+import { calculateFadTotals } from '../logic/fundEngine';
+import { FundingItem } from '../components/shared/FundingItem';
 
 const formatCurrency = (value?: number, defaultText = TEXTS_UI.notApplicable) => {
   if (value === undefined || value === null || isNaN(value)) return defaultText;
@@ -242,7 +242,7 @@ export const FondoAccessorioDipendentePage: React.FC = () => {
 
             return (
                 <FundingItem<FondoAccessorioDipendenteData>
-                    key={def.key}
+                    key={String(def.key)} 
                     id={def.key} 
                     description={currentDescription} 
                     value={data[def.key]} 

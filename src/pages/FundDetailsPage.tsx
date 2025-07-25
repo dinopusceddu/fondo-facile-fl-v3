@@ -1,12 +1,12 @@
 // pages/FundDetailsPage.tsx
 import React from 'react';
-import { useAppContext } from '../contexts/AppContext.tsx';
-import { Card } from '../components/shared/Card.tsx';
-import { FondoAccessorioDipendenteData } from '../types.ts';
-import { TEXTS_UI } from '../constants.ts';
-import { LoadingSpinner } from '../components/shared/LoadingSpinner.tsx';
-import { FundingItem } from '../components/shared/FundingItem.tsx';
-import { fadFieldDefinitions } from './FondoAccessorioDipendentePageHelpers.ts';
+import { useAppContext } from '../contexts/AppContext';
+import { Card } from '../components/shared/Card';
+import { FondoAccessorioDipendenteData } from '../types';
+import { TEXTS_UI } from '../constants';
+import { LoadingSpinner } from '../components/shared/LoadingSpinner';
+import { FundingItem } from '../components/shared/FundingItem';
+import { fadFieldDefinitions } from './FondoAccessorioDipendentePageHelpers';
 
 const formatCurrency = (value?: number, defaultText = TEXTS_UI.notApplicable) => {
   if (value === undefined || value === null || isNaN(value)) return defaultText;
@@ -103,7 +103,7 @@ export const FundDetailsPage: React.FC = () => {
         <p className="text-sm text-[#5f5252] mb-4">Questo è un riepilogo dei valori inseriti per il Fondo del Personale Dipendente, non include i totali calcolati.</p>
         {fadFieldDefinitions.filter(def => def.section === 'stabili').map(def => (
             <FundingItem<FondoAccessorioDipendenteData>
-                key={def.key}
+                key={String(def.key)} 
                 id={def.key} 
                 description={def.description}
                 value={fadData[def.key]} 

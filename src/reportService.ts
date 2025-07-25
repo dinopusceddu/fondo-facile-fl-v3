@@ -124,19 +124,4 @@ export const generateDeterminazionePDF = (
   if (yPos > 250) { doc.addPage(); yPos = 20; }
   addWrappedText(`D E T E R M I N A`);
   yPos += lineSpacing;
-  addWrappedText(`1. Di costituire il Fondo delle Risorse Decentrate per il personale non dirigente per l'anno ${annoRiferimento}, quantificato in complessivi ${formatCurrency(calculatedFund.totaleFondoRisorseDecentrate)}, come dettagliato nella tabella sopra riportata.`);
-  addWrappedText(`2. Di dare atto che il presente provvedimento sarà trasmesso all'Organo di Revisione per la prescritta certificazione.`);
-  addWrappedText(`3. Di dare atto che le risorse stanziate trovano copertura nel Bilancio di Previsione ${annoRiferimento} - ${annoRiferimento+2}.`); // Placeholder
-  // ... altre clausole ...
-  yPos += lineSpacing * 2;
-
-  if (yPos > 260) { doc.addPage(); yPos = 20; }
-  doc.text(`Luogo, ${new Date().toLocaleDateString('it-IT')}`, leftMargin, yPos);
-  yPos += lineSpacing * 2;
-  doc.text(`Il Dirigente Responsabile`, doc.internal.pageSize.width - leftMargin - 60, yPos);
-  yPos += lineSpacing;
-  doc.text(`( ${currentUser.name} )`, doc.internal.pageSize.width - leftMargin - 60, yPos); // Placeholder
-  
-
-  doc.save(`Determinazione_Fondo_${annoRiferimento}.pdf`);
-};
+  addWrappedText(`1. Di costituire il Fondo delle Ris

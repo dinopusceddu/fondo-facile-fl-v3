@@ -112,10 +112,4 @@ export const HistoricalDataForm: React.FC = () => {
           value={historicalData.totaleFondoAnnoPrecedente ?? ''}
           onChange={handleChange}
           placeholder="Es. 350000.00"
-          step="0.01"
-          containerClassName="mb-3"
-        />
-      </div>
-    </Card>
-  );
-};
+          

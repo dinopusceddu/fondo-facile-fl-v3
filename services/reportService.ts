@@ -10,12 +10,12 @@ import {
     SimulatoreIncrementoInput,
     SimulatoreIncrementoRisultati,
     TipologiaEnte
-} from '../types.ts';
+} from '../types';
 import { 
     fadFieldDefinitions, 
-} from '../pages/FondoAccessorioDipendentePageHelpers.ts';
-import { TEXTS_UI, ALL_TIPOLOGIE_ENTE } from '../constants.ts'; 
-import { getFadEffectiveValueHelper, calculateFadTotals } from '../logic/fundEngine.ts';
+} from '../pages/FondoAccessorioDipendentePageHelpers';
+import { TEXTS_UI, ALL_TIPOLOGIE_ENTE } from '../constants'; 
+import { getFadEffectiveValueHelper, calculateFadTotals } from '../logic/fundEngine';
 
 
 // --- PDF Helper Functions ---
@@ -500,7 +500,7 @@ export const generateFADXLS = (
 
                 html += `
                     <tr>
-                        <td class="text">${typeof def.description === 'string' ? def.description : def.key}</td>
+                        <td class="text">${typeof def.description === 'string' ? def.description : String(def.key)}</td>
                         <td class="text">${def.riferimento}</td>
                         ${formatCellCurrency(effectiveValue, def.isSubtractor)}
                         <td class="text" style="text-align: center;">${def.isRelevantToArt23Limit ? 'Sì' : 'No'}</td>

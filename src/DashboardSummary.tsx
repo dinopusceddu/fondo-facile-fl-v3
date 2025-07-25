@@ -1,8 +1,8 @@
 // src/DashboardSummary.tsx
 import React from 'react';
-import { CalculatedFund } from '../types.js';
-import { Card } from './Card.js';
-import { TEXTS_UI } from '../constants.js';
+import { CalculatedFund } from '../types';
+import { Card } from './Card';
+import { TEXTS_UI } from '../constants';
 
 interface DashboardSummaryProps {
   calculatedFund?: CalculatedFund;

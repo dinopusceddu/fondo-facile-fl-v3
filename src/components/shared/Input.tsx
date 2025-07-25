@@ -38,7 +38,6 @@ export const Input: React.FC<InputProps> = ({
     !error && warning && id ? `${id}-warning` : undefined,
   ].filter(Boolean).join(' ');
 
-
   return (
     <div className={`mb-4 ${containerClassName}`}>
       {label && (

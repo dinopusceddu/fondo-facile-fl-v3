@@ -259,35 +259,43 @@ export interface AnnualData {
   calcolatoIncrementoPNRR3?: number;
 }
 
+export interface RisorsaVariabileDetail {
+  stanziate?: number;
+  risparmi?: number;
+  aBilancio?: number;
+}
+
 export interface DistribuzioneRisorseData {
   // art 80, comma 1
   u_diffProgressioniStoriche?: number;
   u_indennitaComparto?: number;
-  u_incrIndennitaEducatori?: number;
-  u_incrIndennitaScolastico?: number;
-  u_indennitaEx8QF?: number;
+  u_incrIndennitaEducatori?: RisorsaVariabileDetail;
+  u_incrIndennitaScolastico?: RisorsaVariabileDetail;
+  u_indennitaEx8QF?: RisorsaVariabileDetail;
 
   // art 80, comma 2
-  p_performanceOrganizzativa?: number;
-  p_performanceIndividuale?: number;
-  p_maggiorazionePerformanceIndividuale?: number;
-  p_indennitaCondizioniLavoro?: number;
-  p_indennitaTurno?: number;
-  p_indennitaReperibilita?: number;
-  p_indennitaLavoroGiornoRiposo?: number;
-  p_compensiSpecificheResponsabilita?: number;
-  p_indennitaFunzioneServizioEsterno?: number;
-  p_incentiviContoTerzi?: number;
-  p_compensiAvvocatura?: number;
-  p_incentiviCondonoFunzioniTecnichePre2018?: number;
-  p_incentiviFunzioniTecnichePost2018?: number;
-  p_incentiviIMUTARI?: number;
-  p_compensiMessiNotificatori?: number;
-  p_compensiCaseGioco?: number;
-  p_compensiCaseGiocoNonCoperti?: number;
-  p_diffStipendialiAnniPrec?: number;
-  p_diffStipendialiAnnoCorrente?: number;
-  p_pianiWelfare?: number;
+  p_performanceOrganizzativa?: RisorsaVariabileDetail;
+  p_performanceIndividuale?: RisorsaVariabileDetail;
+  p_maggiorazionePerformanceIndividuale?: RisorsaVariabileDetail;
+  p_indennitaCondizioniLavoro?: RisorsaVariabileDetail;
+  p_indennitaTurno?: RisorsaVariabileDetail;
+  p_indennitaReperibilita?: RisorsaVariabileDetail;
+  p_indennitaLavoroGiornoRiposo?: RisorsaVariabileDetail;
+  p_compensiSpecificheResponsabilita?: RisorsaVariabileDetail;
+  p_indennitaFunzione?: RisorsaVariabileDetail;
+  p_indennitaServizioEsterno?: RisorsaVariabileDetail;
+  p_obiettiviPoliziaLocale?: RisorsaVariabileDetail;
+  p_incentiviContoTerzi?: RisorsaVariabileDetail;
+  p_compensiAvvocatura?: RisorsaVariabileDetail;
+  p_incentiviCondonoFunzioniTecnichePre2018?: RisorsaVariabileDetail;
+  p_incentiviFunzioniTecnichePost2018?: RisorsaVariabileDetail;
+  p_incentiviIMUTARI?: RisorsaVariabileDetail;
+  p_compensiMessiNotificatori?: RisorsaVariabileDetail;
+  p_compensiCaseGioco?: RisorsaVariabileDetail;
+  p_compensiCaseGiocoNonCoperti?: RisorsaVariabileDetail;
+  p_diffStipendialiAnniPrec?: RisorsaVariabileDetail;
+  p_diffStipendialiAnnoCorrente?: RisorsaVariabileDetail;
+  p_pianiWelfare?: RisorsaVariabileDetail;
   
   // Criteri di distribuzione
   criteri_isConsuntivoMode?: boolean;
